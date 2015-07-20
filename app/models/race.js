@@ -25,7 +25,7 @@ class Race extends Backbone.Model {
 
   urlRoot() {
       // return "http://localhost:3000/race.json";
-      return 'http://letour-livetracking-api.dimensiondata.com/race/';
+      return 'https://letour-livetracking-api.dimensiondata.com/race/';
   }
 
   parse(response) {
