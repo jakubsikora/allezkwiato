@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, DefaultRoute, Route, RouteHandler } from 'react-router';
 import App from './App';
-import Index from './components/Index';
+import Index from './components/index';
 
 // TODO: server rendering wtih more routes
 const routes = (

@@ -23572,7 +23572,7 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _componentsIndex = __webpack_require__(198);
+	var _componentsIndex = __webpack_require__(205);
 
 	var _componentsIndex2 = _interopRequireDefault(_componentsIndex);
 
@@ -23620,275 +23620,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 198 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _modelsRace = __webpack_require__(199);
-
-	var _modelsRace2 = _interopRequireDefault(_modelsRace);
-
-	var _modelsRider = __webpack_require__(203);
-
-	var _modelsRider2 = _interopRequireDefault(_modelsRider);
-
-	var riders = new _modelsRider2['default']();
-	var race = new _modelsRace2['default']();
-
-	var Index = _react2['default'].createClass({
-	  displayName: 'Index',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      filterText: ''
-	    };
-	  },
-	  onUserInput: function onUserInput() {
-	    var text = this.refs['filterTextInput'].getDOMNode().value;
-
-	    this.setState({
-	      filterText: text
-	    });
-	  },
-	  render: function render() {
-	    var riders = this.props.data.riders;
-	    var filterText = this.state.filterText;
-	    var rows = riders.map(function (rider, index) {
-	      var lastName = rider.LastName.toLowerCase();
-	      if (filterText && lastName.indexOf(filterText) === -1) {
-	        return;
-	      } else {
-	        return _react2['default'].createElement(
-	          'tr',
-	          { key: index },
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.PositionInTheRace
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '40' })
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.FirstName
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.LastName
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.TeamCode
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.gap
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.DistanceToFinish.toFixed(2)
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.CurrentSpeed
-	          ),
-	          _react2['default'].createElement(
-	            'td',
-	            null,
-	            rider.AverageSpeed
-	          )
-	        );
-	      }
-	    });
-
-	    return _react2['default'].createElement(
-	      'div',
-	      { className: 'panel panel-default' },
-	      _react2['default'].createElement(
-	        'div',
-	        { className: 'panel-heading' },
-	        _react2['default'].createElement(
-	          'h3',
-	          { className: 'panel-title' },
-	          _react2['default'].createElement(
-	            'span',
-	            null,
-	            'Race speed: ',
-	            this.props.data.speed.toFixed(2),
-	            ' km/h, '
-	          ),
-	          _react2['default'].createElement(
-	            'span',
-	            null,
-	            'Remaining: ',
-	            this.props.data.distanceToFinish.toFixed(2),
-	            ' km, '
-	          ),
-	          _react2['default'].createElement(
-	            'span',
-	            null,
-	            'Current distance: ',
-	            this.props.data.distanceFromStart.toFixed(2),
-	            ' km'
-	          )
-	        )
-	      ),
-	      _react2['default'].createElement(
-	        'div',
-	        { className: 'panel-body' },
-	        _react2['default'].createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2['default'].createElement(
-	            'div',
-	            { className: 'col-lg-6' },
-	            _react2['default'].createElement('input', {
-	              type: 'text',
-	              className: 'form-control',
-	              placeholder: 'Search for...',
-	              value: this.state.filterText,
-	              ref: 'filterTextInput',
-	              onChange: this.onUserInput })
-	          )
-	        )
-	      ),
-	      _react2['default'].createElement(
-	        'div',
-	        { className: 'table-responsive' },
-	        _react2['default'].createElement(
-	          'table',
-	          { className: 'table table-bordered table-striped table-condensed' },
-	          _react2['default'].createElement(
-	            'thead',
-	            null,
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              '#'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Photo'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'First name'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Last name'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Team'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Gap'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Remaining (km)'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Current Speed (km/h)'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Avg (km/h)'
-	            )
-	          ),
-	          _react2['default'].createElement(
-	            'tbody',
-	            null,
-	            rows
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-
-	function connectToRace(Component, race) {
-	  var raceConnection = _react2['default'].createClass({
-	    displayName: 'raceConnection',
-
-	    getInitialState: function getInitialState() {
-	      // return riders
-	      //   .fetch()
-	      //   .then(function(response) {
-	      //     return race
-	      //       .fetch()
-	      //       .then(function(res) {
-	      //         return {
-	      //           data: res
-	      //         };
-	      //       })
-	      //   });
-
-	      race.fetch();
-
-	      return {
-	        data: race.toJSON()
-	      };
-	    },
-	    componentDidMount: function componentDidMount() {
-	      race.on('add remove change', this.onModelChange);
-	    },
-	    componentWillUnmount: function componentWillUnmount() {
-	      race.on(null, null, this.onModelChange);
-	    },
-	    onModelChange: function onModelChange() {
-	      if (this.isMounted) {
-	        //console.log('onModelChange');
-	        this.setState({
-	          data: race.toJSON()
-	        });
-	      }
-	    },
-	    render: function render() {
-	      return _react2['default'].createElement(Component, _extends({}, this.state, this.props));
-	    }
-	  });
-
-	  return raceConnection;
-	}
-
-	exports['default'] = connectToRace(Index, race);
-	module.exports = exports['default'];
-
-/***/ },
+/* 198 */,
 /* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -36727,6 +36459,276 @@
 	module.exports = exports['default'];
 
 	// TODO: properties
+
+/***/ },
+/* 204 */,
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _modelsRace = __webpack_require__(199);
+
+	var _modelsRace2 = _interopRequireDefault(_modelsRace);
+
+	var _modelsRider = __webpack_require__(203);
+
+	var _modelsRider2 = _interopRequireDefault(_modelsRider);
+
+	var riders = new _modelsRider2['default']();
+	var race = new _modelsRace2['default']();
+
+	var Index = _react2['default'].createClass({
+	  displayName: 'Index',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      filterText: ''
+	    };
+	  },
+	  onUserInput: function onUserInput() {
+	    var text = this.refs['filterTextInput'].getDOMNode().value;
+
+	    this.setState({
+	      filterText: text
+	    });
+	  },
+	  render: function render() {
+	    var riders = this.props.data.riders;
+	    var filterText = this.state.filterText;
+	    var rows = riders.map(function (rider, index) {
+	      var lastName = rider.LastName.toLowerCase();
+	      if (filterText && lastName.indexOf(filterText) === -1) {
+	        return;
+	      } else {
+	        return _react2['default'].createElement(
+	          'tr',
+	          { key: index },
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.PositionInTheRace
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '40' })
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.FirstName
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.LastName
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.TeamCode
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.gap
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.DistanceToFinish.toFixed(2)
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.CurrentSpeed
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.AverageSpeed
+	          )
+	        );
+	      }
+	    });
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: 'panel panel-default' },
+	      _react2['default'].createElement(
+	        'div',
+	        { className: 'panel-heading' },
+	        _react2['default'].createElement(
+	          'h3',
+	          { className: 'panel-title' },
+	          _react2['default'].createElement(
+	            'span',
+	            null,
+	            'Race speed: ',
+	            this.props.data.speed.toFixed(2),
+	            ' km/h, '
+	          ),
+	          _react2['default'].createElement(
+	            'span',
+	            null,
+	            'Remaining: ',
+	            this.props.data.distanceToFinish.toFixed(2),
+	            ' km, '
+	          ),
+	          _react2['default'].createElement(
+	            'span',
+	            null,
+	            'Current distance: ',
+	            this.props.data.distanceFromStart.toFixed(2),
+	            ' km'
+	          )
+	        )
+	      ),
+	      _react2['default'].createElement(
+	        'div',
+	        { className: 'panel-body' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'col-lg-6' },
+	            _react2['default'].createElement('input', {
+	              type: 'text',
+	              className: 'form-control',
+	              placeholder: 'Search for...',
+	              value: this.state.filterText,
+	              ref: 'filterTextInput',
+	              onChange: this.onUserInput })
+	          )
+	        )
+	      ),
+	      _react2['default'].createElement(
+	        'div',
+	        { className: 'table-responsive' },
+	        _react2['default'].createElement(
+	          'table',
+	          { className: 'table table-bordered table-striped table-condensed' },
+	          _react2['default'].createElement(
+	            'thead',
+	            null,
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              '#'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Photo'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'First name'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Last name'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Team'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Gap'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Remaining (km)'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Current Speed (km/h)'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Avg (km/h)'
+	            )
+	          ),
+	          _react2['default'].createElement(
+	            'tbody',
+	            null,
+	            rows
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	function connectToRace(Component, race) {
+	  var raceConnection = _react2['default'].createClass({
+	    displayName: 'raceConnection',
+
+	    getInitialState: function getInitialState() {
+	      // return riders
+	      //   .fetch()
+	      //   .then(function(response) {
+	      //     return race
+	      //       .fetch()
+	      //       .then(function(res) {
+	      //         return {
+	      //           data: res
+	      //         };
+	      //       })
+	      //   });
+
+	      race.fetch();
+
+	      return {
+	        data: race.toJSON()
+	      };
+	    },
+	    componentDidMount: function componentDidMount() {
+	      race.on('add remove change', this.onModelChange);
+	    },
+	    componentWillUnmount: function componentWillUnmount() {
+	      race.on(null, null, this.onModelChange);
+	    },
+	    onModelChange: function onModelChange() {
+	      if (this.isMounted) {
+	        //console.log('onModelChange');
+	        this.setState({
+	          data: race.toJSON()
+	        });
+	      }
+	    },
+	    render: function render() {
+	      return _react2['default'].createElement(Component, _extends({}, this.state, this.props));
+	    }
+	  });
+
+	  return raceConnection;
+	}
+
+	exports['default'] = connectToRace(Index, race);
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
