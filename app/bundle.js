@@ -23651,14 +23651,78 @@
 	var Index = _react2['default'].createClass({
 	  displayName: 'Index',
 
+	  getInitialState: function getInitialState() {
+	    return {
+	      filterText: ''
+	    };
+	  },
+	  onUserInput: function onUserInput() {
+	    var text = this.refs['filterTextInput'].getDOMNode().value;
+
+	    this.setState({
+	      filterText: text
+	    });
+	  },
 	  render: function render() {
-	    //console.log('props', this.props.data);
-	    if (this.props.data.riders.length) {
-	      if (riders.models.length) {
-	        console.log(riders.detailsById(this.props.data.riders[0].Id));
+	    var riders = this.props.data.riders;
+	    var filterText = this.state.filterText;
+	    var rows = riders.map(function (rider, index) {
+	      var lastName = rider.LastName.toLowerCase();
+	      if (filterText && lastName.indexOf(filterText) === -1) {
+	        return;
+	      } else {
+	        return _react2['default'].createElement(
+	          'tr',
+	          { key: index },
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.PositionInTheRace
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '40' })
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.FirstName
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.LastName
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.TeamCode
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.gap
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.DistanceToFinish.toFixed(2)
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.CurrentSpeed
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.AverageSpeed
+	          )
+	        );
 	      }
-	      //console.log();
-	    }
+	    });
+
 	    return _react2['default'].createElement(
 	      'div',
 	      { className: 'panel panel-default' },
@@ -23671,12 +23735,23 @@
 	          _react2['default'].createElement(
 	            'span',
 	            null,
-	            'Race speed: '
+	            'Race speed: ',
+	            this.props.data.speed.toFixed(2),
+	            ' km/h, '
 	          ),
 	          _react2['default'].createElement(
 	            'span',
 	            null,
-	            ' Distance left:'
+	            'Remaining: ',
+	            this.props.data.distanceToFinish.toFixed(2),
+	            ' km, '
+	          ),
+	          _react2['default'].createElement(
+	            'span',
+	            null,
+	            'Current distance: ',
+	            this.props.data.distanceFromStart.toFixed(2),
+	            ' km'
 	          )
 	        )
 	      ),
@@ -23689,98 +23764,75 @@
 	          _react2['default'].createElement(
 	            'div',
 	            { className: 'col-lg-6' },
-	            _react2['default'].createElement(
-	              'div',
-	              { className: 'input-group' },
-	              _react2['default'].createElement('input', { type: 'text', className: 'form-control', placeholder: 'Search for...' }),
-	              _react2['default'].createElement(
-	                'span',
-	                { className: 'input-group-btn' },
-	                _react2['default'].createElement(
-	                  'button',
-	                  { className: 'btn btn-default', type: 'button' },
-	                  'Go!'
-	                )
-	              )
-	            )
+	            _react2['default'].createElement('input', {
+	              type: 'text',
+	              className: 'form-control',
+	              placeholder: 'Search for...',
+	              value: this.state.filterText,
+	              ref: 'filterTextInput',
+	              onChange: this.onUserInput })
 	          )
-	        ),
-	        _react2['default'].createElement('div', { className: 'row' }),
+	        )
+	      ),
+	      _react2['default'].createElement(
+	        'div',
+	        { className: 'table-responsive' },
 	        _react2['default'].createElement(
-	          'div',
-	          { className: 'table-responsive' },
+	          'table',
+	          { className: 'table table-bordered table-striped table-condensed' },
 	          _react2['default'].createElement(
-	            'table',
-	            { className: 'table table-bordered table-striped table-condensed' },
+	            'thead',
+	            null,
 	            _react2['default'].createElement(
-	              'thead',
+	              'th',
 	              null,
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                '#'
-	              ),
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                'First name'
-	              ),
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                'Last name'
-	              ),
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                'Time'
-	              ),
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                'Gap'
-	              ),
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                'Distance to finish'
-	              ),
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                'Current Speed'
-	              ),
-	              _react2['default'].createElement(
-	                'th',
-	                null,
-	                'Avg Speed'
-	              )
+	              '#'
 	            ),
 	            _react2['default'].createElement(
-	              'tbody',
+	              'th',
 	              null,
-	              _react2['default'].createElement(
-	                'td',
-	                null,
-	                '1'
-	              ),
-	              _react2['default'].createElement(
-	                'td',
-	                null,
-	                'Michal'
-	              ),
-	              _react2['default'].createElement(
-	                'td',
-	                null,
-	                'Kwiatkowski'
-	              ),
-	              _react2['default'].createElement(
-	                'td',
-	                null,
-	                '1h 00 00'
-	              ),
-	              _react2['default'].createElement('td', null)
+	              'Photo'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'First name'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Last name'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Team'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Gap'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Remaining (km)'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Current Speed (km/h)'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Avg (km/h)'
 	            )
+	          ),
+	          _react2['default'].createElement(
+	            'tbody',
+	            null,
+	            rows
 	          )
 	        )
 	      )
@@ -23788,7 +23840,7 @@
 	  }
 	});
 
-	function connectToRace(Component, race, riders) {
+	function connectToRace(Component, race) {
 	  var raceConnection = _react2['default'].createClass({
 	    displayName: 'raceConnection',
 
@@ -23806,12 +23858,12 @@
 	      //   });
 
 	      race.fetch();
+
 	      return {
 	        data: race.toJSON()
 	      };
 	    },
 	    componentDidMount: function componentDidMount() {
-	      riders.fetch();
 	      race.on('add remove change', this.onModelChange);
 	    },
 	    componentWillUnmount: function componentWillUnmount() {
@@ -23833,7 +23885,7 @@
 	  return raceConnection;
 	}
 
-	exports['default'] = connectToRace(Index, race, riders);
+	exports['default'] = connectToRace(Index, race);
 	module.exports = exports['default'];
 
 /***/ },
@@ -23859,6 +23911,12 @@
 	var _Backbone = __webpack_require__(200);
 
 	var _Backbone2 = _interopRequireDefault(_Backbone);
+
+	var _rider = __webpack_require__(203);
+
+	var _rider2 = _interopRequireDefault(_rider);
+
+	var ridersObj = new _rider2['default']();
 
 	var Race = (function (_Backbone$Model) {
 	  _inherits(Race, _Backbone$Model);
@@ -23887,27 +23945,56 @@
 	  }, {
 	    key: 'urlRoot',
 	    value: function urlRoot() {
-	      return 'http://localhost:3000/race.json';
+	      // return "http://localhost:3000/race.json";
+	      return 'http://letour-livetracking-api.dimensiondata.com/race/';
 	    }
 	  }, {
 	    key: 'parse',
 	    value: function parse(response) {
-	      var groups = response.Groups;
-	      var riders = [];
+	      var that = this;
+	      ridersObj.fetch().then(function (ridersRes) {
+	        var groups = response.Groups;
+	        var ridersArr = [];
 
-	      this.set({ currentTime: response.TimeStampEpochInt });
-	      this.set({ speed: response.RaceSpeed });
-	      this.set({ maxSpeed: response.RaceMaxSpeed });
-	      this.set({ distanceToFinish: response.RaceDistanceToFinish });
-	      this.set({ distanceFromStart: response.RaceDistanceFromStart });
+	        that.set({ currentTime: response.TimeStampEpochInt });
+	        that.set({ speed: response.RaceSpeed });
+	        that.set({ maxSpeed: response.RaceMaxSpeed });
+	        that.set({ distanceToFinish: response.RaceDistanceToFinish });
+	        that.set({ distanceFromStart: response.RaceDistanceFromStart });
 
-	      groups.forEach(function (group) {
-	        group.Riders.forEach(function (rider) {
-	          riders.push(rider);
+	        groups.forEach(function (group) {
+	          group.Riders.forEach(function (item) {
+	            var riderDetails = {};
+	            riderDetails = that.lookupRider(ridersRes, item.Id);
+	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? '' : that.formatGap(group.GapToLeadingGroupT);
+	            var rider = jQuery.extend({}, item, riderDetails);
+	            ridersArr.push(rider);
+	          });
 	        });
-	      });
 
-	      this.set({ riders: riders });
+	        that.set({ riders: ridersArr });
+	      });
+	    }
+	  }, {
+	    key: 'formatGap',
+	    value: function formatGap(time) {
+	      var minutes = Math.floor(time / 60);
+	      var seconds = time - minutes * 60;
+
+	      minutes = minutes.toFixed(0);
+	      seconds = seconds.toFixed(0);
+
+	      minutes = minutes < 10 ? '0' + minutes : minutes;
+	      seconds = seconds < 10 ? '0' + seconds : seconds;
+
+	      return minutes + ':' + seconds;
+	    }
+	  }, {
+	    key: 'lookupRider',
+	    value: function lookupRider(riders, id) {
+	      return riders.filter(function (rider) {
+	        return rider.Id === id;
+	      })[0];
 	    }
 	  }]);
 
@@ -36620,7 +36707,6 @@
 	    key: 'detailsById',
 	    value: function detailsById(id) {
 	      return this.models.filter(function (item) {
-	        console.log(item);
 	        return item.attributes.Id === id;
 	      });
 	    }
@@ -36630,7 +36716,7 @@
 	    // TODO: parser for custom properties
 
 	    value: function url() {
-	      return 'http://localhost:3000/rider.json';
+	      return 'http://letour-livetracking-api.dimensiondata.com/rider';
 	    }
 	  }]);
 

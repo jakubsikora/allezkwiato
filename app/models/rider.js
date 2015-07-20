@@ -18,15 +18,14 @@ class Riders extends Backbone.Collection {
 
   detailsById(id) {
     return this.models.filter(function(item) {
-      console.log(item);
       return item.attributes.Id === id;
-    })
+    });
   }
 
   // TODO: parser for custom properties
 
   url() {
-    return "http://localhost:3000/rider.json";
+    return "http://letour-livetracking-api.dimensiondata.com/rider";
   }
 }
 

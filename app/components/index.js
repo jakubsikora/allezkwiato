@@ -6,62 +6,88 @@ const riders = new Riders();
 const race = new Race();
 
 const Index = React.createClass({
-  render () {
-    //console.log('props', this.props.data);
-    if (this.props.data.riders.length) {
-      if (riders.models.length) {
-        console.log(riders.detailsById(this.props.data.riders[0].Id));
-      }
-      //console.log();
-    }
+  getInitialState() {
+    return {
+        filterText: ''
+    };
+  },
+  onUserInput() {
+    const text = this.refs['filterTextInput'].getDOMNode().value;
+
+    this.setState({
+      filterText: text
+    });
+  },
+  render() {
+    const riders = this.props.data.riders;
+    const filterText = this.state.filterText;
+    const rows = riders.map(function(rider, index) {
+        const lastName = rider.LastName.toLowerCase();
+        if (filterText && lastName.indexOf(filterText) === -1) {
+          return;
+        } else {
+          return (
+            <tr key={index}>
+              <td>{rider.PositionInTheRace}</td>
+              <td><img src={rider.PhotoUri} height="40" /></td>
+              <td>{rider.FirstName}</td>
+              <td>{rider.LastName}</td>
+              <td>{rider.TeamCode}</td>
+              <td>{rider.gap}</td>
+              <td>{rider.DistanceToFinish.toFixed(2 )}</td>
+              <td>{rider.CurrentSpeed}</td>
+              <td>{rider.AverageSpeed}</td>
+            </tr>
+          );
+        }
+      });
+
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
           <h3 className="panel-title">
-            <span>Race speed: </span>
-            <span> Distance left:</span>
+            <span>Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
+            <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
+            <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km</span>
           </h3>
         </div>
         <div className="panel-body">
           <div className="row">
             <div className="col-lg-6">
-              <div className="input-group">
-                <input type="text" className="form-control" placeholder="Search for..." />
-                <span className="input-group-btn">
-                  <button className="btn btn-default" type="button">Go!</button>
-                </span>
-              </div>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search for..."
+                  value={this.state.filterText}
+                  ref="filterTextInput"
+                  onChange={this.onUserInput} />
             </div>
           </div>
-          <div className="row"></div>
-          <div className="table-responsive">
-            <table className="table table-bordered table-striped table-condensed">
-              <thead>
-                <th>#</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>Time</th>
-                <th>Gap</th>
-                <th>Distance to finish</th>
-                <th>Current Speed</th>
-                <th>Avg Speed</th>
-              </thead>
-              <tbody>
-                <td>1</td>
-                <td>Michal</td>
-                <td>Kwiatkowski</td>
-                <td>1h 00 00</td>
-                <td></td>
-              </tbody>
-            </table>
-          </div>
+        </div>
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped table-condensed">
+            <thead>
+              <th>#</th>
+              <th>Photo</th>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Team</th>
+              <th>Gap</th>
+              <th>Remaining (km)</th>
+              <th>Current Speed (km/h)</th>
+              <th>Avg (km/h)</th>
+            </thead>
+            <tbody>
+              {rows}
+            </tbody>
+          </table>
         </div>
       </div>
     )
   }
 });
 
-function connectToRace(Component, race, riders) {
+function connectToRace(Component, race) {
   const raceConnection = React.createClass({
     getInitialState() {
       // return riders
@@ -77,12 +103,12 @@ function connectToRace(Component, race, riders) {
       //   });
 
       race.fetch();
+
       return {
         data: race.toJSON()
       };
     },
     componentDidMount() {
-      riders.fetch();
       race.on('add remove change', this.onModelChange);
     },
     componentWillUnmount() {
@@ -106,4 +132,4 @@ function connectToRace(Component, race, riders) {
   return raceConnection;
 }
 
-export default connectToRace(Index, race, riders);
+export default connectToRace(Index, race);
