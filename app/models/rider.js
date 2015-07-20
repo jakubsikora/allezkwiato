@@ -1,6 +1,6 @@
 'use strict';
 
-import Backbone from 'Backbone';
+import Backbone from 'backbone';
 
 class Rider extends Backbone.Model {
   // TODO: properties

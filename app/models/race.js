@@ -1,6 +1,6 @@
 'use strict';
 
-import Backbone from 'Backbone';
+import Backbone from 'backbone';
 import Riders from './rider';
 
 
