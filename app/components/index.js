@@ -33,7 +33,7 @@ const Index = React.createClass({
               <td>{rider.LastName}</td>
               <td>{rider.TeamCode}</td>
               <td>{rider.gap}</td>
-              <td>{rider.DistanceToFinish.toFixed(2 )}</td>
+              <td>{rider.DistanceToFinish.toFixed(2)}</td>
               <td>{rider.CurrentSpeed}</td>
               <td>{rider.AverageSpeed}</td>
               <td>{rider.generalPos}</td>
