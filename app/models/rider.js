@@ -25,6 +25,7 @@ class Riders extends Backbone.Collection {
   // TODO: parser for custom properties
 
   url() {
+    //return "http://localhost:3000/rider.json";
     return "https://letour-livetracking-api.dimensiondata.com/rider";
   }
 }

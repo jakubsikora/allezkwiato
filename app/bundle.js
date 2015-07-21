@@ -23645,7 +23645,6 @@
 
 	var _modelsRider2 = _interopRequireDefault(_modelsRider);
 
-	var riders = new _modelsRider2['default']();
 	var race = new _modelsRace2['default']();
 
 	var Index = _react2['default'].createClass({
@@ -23718,6 +23717,21 @@
 	            'td',
 	            null,
 	            rider.AverageSpeed
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.generalPos
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.generalGap
+	          ),
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            rider.liveGap
 	          )
 	        );
 	      }
@@ -23811,7 +23825,7 @@
 	            _react2['default'].createElement(
 	              'th',
 	              null,
-	              'Gap'
+	              'Stage Gap'
 	            ),
 	            _react2['default'].createElement(
 	              'th',
@@ -23827,6 +23841,21 @@
 	              'th',
 	              null,
 	              'Avg (km/h)'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'General Pos'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'General Gap'
+	            ),
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Live General Gap'
 	            )
 	          ),
 	          _react2['default'].createElement(
@@ -23857,7 +23886,7 @@
 	      //       })
 	      //   });
 
-	      race.fetch();
+	      this.liveReload();
 
 	      return {
 	        data: race.toJSON()
@@ -23876,6 +23905,13 @@
 	          data: race.toJSON()
 	        });
 	      }
+	    },
+	    liveReload: function liveReload() {
+	      var that = this;
+	      race.fetch({
+	        add: true
+	      });
+	      setTimeout(that.liveReload, 5000);
 	    },
 	    render: function render() {
 	      return _react2['default'].createElement(Component, _extends({}, this.state, this.props));
@@ -23936,7 +23972,8 @@
 	        maxSpeed: 0,
 	        distanceToFinish: 0,
 	        distanceFromStart: 0,
-	        riders: []
+	        riders: [],
+	        leaderGap: null
 	      };
 	    }
 	  }, {
@@ -23945,8 +23982,8 @@
 	  }, {
 	    key: 'urlRoot',
 	    value: function urlRoot() {
-	      // return "http://localhost:3000/race.json";
-	      return 'http://letour-livetracking-api.dimensiondata.com/race/';
+	      //return "http://localhost:3000/race.json";
+	      return 'https://letour-livetracking-api.dimensiondata.com/race/';
 	    }
 	  }, {
 	    key: 'parse',
@@ -23962,32 +23999,97 @@
 	        that.set({ distanceToFinish: response.RaceDistanceToFinish });
 	        that.set({ distanceFromStart: response.RaceDistanceFromStart });
 
+	        // FIXME: nasty! load the leader first
 	        groups.forEach(function (group) {
 	          group.Riders.forEach(function (item) {
 	            var riderDetails = {};
 	            riderDetails = that.lookupRider(ridersRes, item.Id);
-	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? '' : that.formatGap(group.GapToLeadingGroupT);
+	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
+
+	            var generalClass = riderDetails.GeneralClassification.split(', ');
+	            riderDetails.generalPos = generalClass[0];
+	            riderDetails.generalGap = generalClass[1];
+
+	            if (item.HasYellowJersey) {
+	              that.set({ leaderGap: riderDetails.gap });
+	              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+
+	              var rider = jQuery.extend({}, item, riderDetails);
+	              ridersArr.push(rider);
+	            }
+	          });
+	        });
+
+	        groups.forEach(function (group) {
+	          group.Riders.forEach(function (item) {
+	            var riderDetails = {};
+	            riderDetails = that.lookupRider(ridersRes, item.Id);
+	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
+
+	            var generalClass = riderDetails.GeneralClassification.split(', ');
+	            riderDetails.generalPos = generalClass[0];
+	            riderDetails.generalGap = generalClass[1];
+
+	            riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+
 	            var rider = jQuery.extend({}, item, riderDetails);
 	            ridersArr.push(rider);
 	          });
 	        });
 
+	        ridersArr = sortByKey(ridersArr, 'PositionInTheRace');
+
+	        function sortByKey(array, key) {
+	          return array.sort(function (a, b) {
+	            var x = a[key];
+	            var y = b[key];
+	            return x < y ? -1 : x > y ? 1 : 0;
+	          });
+	        }
+
 	        that.set({ riders: ridersArr });
 	      });
 	    }
 	  }, {
+	    key: 'calculateLiveGap',
+	    value: function calculateLiveGap(rider) {
+	      var leaderGap = this.get('leaderGap');
+	      var riderGap = rider.gap ? rider.gap : '00:00:00';
+
+	      if (leaderGap) {
+	        var leaderGapParts = leaderGap.split(':');
+	        var riderGapParts = riderGap.split(':');
+
+	        var leaderGapSec = parseInt(leaderGapParts[0]) * 60 * 60 + parseInt(leaderGapParts[1]) * 60 + parseInt(leaderGapParts[2]);
+	        var riderGapSec = parseInt(riderGapParts[0]) * 60 * 60 + parseInt(riderGapParts[1]) * 60 + parseInt(riderGapParts[2]);
+
+	        var diffSec = parseInt(riderGapSec) - parseInt(leaderGapSec);
+
+	        var riderGeneralGap = rider.generalGap;
+	        var riderGeneralGapParts = riderGeneralGap.split(':');
+	        var riderGeneralGapSec = parseInt(riderGeneralGapParts[0]) * 60 * 60 + parseInt(riderGeneralGapParts[1]) * 60 + parseInt(riderGeneralGapParts[2]);
+
+	        riderGeneralGapSec = parseInt(riderGeneralGapSec) + parseInt(diffSec);
+
+	        return this.formatGap(riderGeneralGapSec);
+	      }
+	    }
+	  }, {
 	    key: 'formatGap',
 	    value: function formatGap(time) {
+	      var hours = Math.floor(time / 3600);
+	      time = time - hours * 3600;
 	      var minutes = Math.floor(time / 60);
 	      var seconds = time - minutes * 60;
 
 	      minutes = minutes.toFixed(0);
 	      seconds = seconds.toFixed(0);
 
+	      hours = hours < 10 ? '0' + hours : hours;
 	      minutes = minutes < 10 ? '0' + minutes : minutes;
 	      seconds = seconds < 10 ? '0' + seconds : seconds;
 
-	      return minutes + ':' + seconds;
+	      return hours + ':' + minutes + ':' + seconds;
 	    }
 	  }, {
 	    key: 'lookupRider',
@@ -36716,7 +36818,8 @@
 	    // TODO: parser for custom properties
 
 	    value: function url() {
-	      return 'http://letour-livetracking-api.dimensiondata.com/rider';
+	      //return "http://localhost:3000/rider.json";
+	      return 'https://letour-livetracking-api.dimensiondata.com/rider';
 	    }
 	  }]);
 

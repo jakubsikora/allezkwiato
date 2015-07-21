@@ -2,7 +2,6 @@ import React from 'react';
 import Race from '../models/race';
 import Riders from '../models/rider';
 
-const riders = new Riders();
 const race = new Race();
 
 const Index = React.createClass({
@@ -37,6 +36,9 @@ const Index = React.createClass({
               <td>{rider.DistanceToFinish.toFixed(2 )}</td>
               <td>{rider.CurrentSpeed}</td>
               <td>{rider.AverageSpeed}</td>
+              <td>{rider.generalPos}</td>
+              <td>{rider.generalGap}</td>
+              <td>{rider.liveGap}</td>
             </tr>
           );
         }
@@ -72,10 +74,13 @@ const Index = React.createClass({
               <th>First name</th>
               <th>Last name</th>
               <th>Team</th>
-              <th>Gap</th>
+              <th>Stage Gap</th>
               <th>Remaining (km)</th>
               <th>Current Speed (km/h)</th>
               <th>Avg (km/h)</th>
+              <th>General Pos</th>
+              <th>General Gap</th>
+              <th>Live General Gap</th>
             </thead>
             <tbody>
               {rows}
@@ -102,7 +107,7 @@ function connectToRace(Component, race) {
       //       })
       //   });
 
-      race.fetch();
+      this.liveReload();
 
       return {
         data: race.toJSON()
@@ -121,6 +126,13 @@ function connectToRace(Component, race) {
             data: race.toJSON()
         });
       }
+    },
+    liveReload() {
+      const that = this;
+      race.fetch({
+        add: true
+      });
+      setTimeout(that.liveReload, 5000);
     },
     render() {
       return (
