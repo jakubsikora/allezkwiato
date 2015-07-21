@@ -46,17 +46,17 @@ class Race extends Backbone.Model {
         // FIXME: nasty! load the leader first
         groups.forEach(function(group) {
           group.Riders.forEach(function(item) {
-            let riderDetails = {};
-            riderDetails = that.lookupRider(ridersRes, item.Id);
-            riderDetails.gap = group.GapToLeadingGroupT === 0
-              ? null
-              : that.formatGap(group.GapToLeadingGroupT);
-
-            const generalClass = riderDetails.GeneralClassification.split(', ');
-            riderDetails.generalPos = generalClass[0];
-            riderDetails.generalGap = generalClass[1];
-
             if (item.HasYellowJersey) {
+              let riderDetails = {};
+              riderDetails = that.lookupRider(ridersRes, item.Id);
+              riderDetails.gap = group.GapToLeadingGroupT === 0
+                ? null
+                : that.formatGap(group.GapToLeadingGroupT);
+
+              const generalClass = riderDetails.GeneralClassification.split(', ');
+              riderDetails.generalPos = generalClass[0];
+              riderDetails.generalGap = generalClass[1];
+
               that.set({leaderGap: riderDetails.gap});
               riderDetails.liveGap = that.calculateLiveGap(riderDetails);
 
@@ -68,20 +68,22 @@ class Race extends Backbone.Model {
 
         groups.forEach(function(group) {
           group.Riders.forEach(function(item) {
-            let riderDetails = {};
-            riderDetails = that.lookupRider(ridersRes, item.Id);
-            riderDetails.gap = group.GapToLeadingGroupT === 0
-              ? null
-              : that.formatGap(group.GapToLeadingGroupT);
+            if (!item.HasYellowJersey) {
+              let riderDetails = {};
+              riderDetails = that.lookupRider(ridersRes, item.Id);
+              riderDetails.gap = group.GapToLeadingGroupT === 0
+                ? null
+                : that.formatGap(group.GapToLeadingGroupT);
 
-            const generalClass = riderDetails.GeneralClassification.split(', ');
-            riderDetails.generalPos = generalClass[0];
-            riderDetails.generalGap = generalClass[1];
+              const generalClass = riderDetails.GeneralClassification.split(', ');
+              riderDetails.generalPos = generalClass[0];
+              riderDetails.generalGap = generalClass[1];
 
-            riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
 
-            const rider = jQuery.extend({}, item, riderDetails);
-            ridersArr.push(rider);
+              const rider = jQuery.extend({}, item, riderDetails);
+              ridersArr.push(rider);
+            }
           })
         });
 
