@@ -66,6 +66,8 @@ class Race extends Backbone.Model {
           })
         });
 
+
+
         groups.forEach(function(group) {
           group.Riders.forEach(function(item) {
             if (!item.HasYellowJersey) {
@@ -83,11 +85,13 @@ class Race extends Backbone.Model {
 
               const rider = jQuery.extend({}, item, riderDetails);
               ridersArr.push(rider);
+
             }
           })
         });
 
         ridersArr = sortByKey(ridersArr, 'PositionInTheRace');
+        that.set({riders: ridersArr});
 
         function sortByKey(array, key) {
           return array.sort(function(a, b) {
@@ -97,7 +101,7 @@ class Race extends Backbone.Model {
           });
         }
 
-        that.set({riders: ridersArr});
+
       });
   }
 

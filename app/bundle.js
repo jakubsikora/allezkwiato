@@ -24002,15 +24002,15 @@
 	        // FIXME: nasty! load the leader first
 	        groups.forEach(function (group) {
 	          group.Riders.forEach(function (item) {
-	            var riderDetails = {};
-	            riderDetails = that.lookupRider(ridersRes, item.Id);
-	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
-
-	            var generalClass = riderDetails.GeneralClassification.split(', ');
-	            riderDetails.generalPos = generalClass[0];
-	            riderDetails.generalGap = generalClass[1];
-
 	            if (item.HasYellowJersey) {
+	              var riderDetails = {};
+	              riderDetails = that.lookupRider(ridersRes, item.Id);
+	              riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
+
+	              var generalClass = riderDetails.GeneralClassification.split(', ');
+	              riderDetails.generalPos = generalClass[0];
+	              riderDetails.generalGap = generalClass[1];
+
 	              that.set({ leaderGap: riderDetails.gap });
 	              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
 
@@ -24022,22 +24022,25 @@
 
 	        groups.forEach(function (group) {
 	          group.Riders.forEach(function (item) {
-	            var riderDetails = {};
-	            riderDetails = that.lookupRider(ridersRes, item.Id);
-	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
+	            if (!item.HasYellowJersey) {
+	              var riderDetails = {};
+	              riderDetails = that.lookupRider(ridersRes, item.Id);
+	              riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
 
-	            var generalClass = riderDetails.GeneralClassification.split(', ');
-	            riderDetails.generalPos = generalClass[0];
-	            riderDetails.generalGap = generalClass[1];
+	              var generalClass = riderDetails.GeneralClassification.split(', ');
+	              riderDetails.generalPos = generalClass[0];
+	              riderDetails.generalGap = generalClass[1];
 
-	            riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+	              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
 
-	            var rider = jQuery.extend({}, item, riderDetails);
-	            ridersArr.push(rider);
+	              var rider = jQuery.extend({}, item, riderDetails);
+	              ridersArr.push(rider);
+	            }
 	          });
 	        });
 
 	        ridersArr = sortByKey(ridersArr, 'PositionInTheRace');
+	        that.set({ riders: ridersArr });
 
 	        function sortByKey(array, key) {
 	          return array.sort(function (a, b) {
@@ -24046,8 +24049,6 @@
 	            return x < y ? -1 : x > y ? 1 : 0;
 	          });
 	        }
-
-	        that.set({ riders: ridersArr });
 	      });
 	    }
 	  }, {
