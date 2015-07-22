@@ -35,6 +35,8 @@ class Race extends Backbone.Model {
     const that = this;
     const ridersCache = that.get('ridersCache');
 
+    if (!raceResponse) return;
+
     if (ridersCache.length) {
       that.parseRace(ridersCache, raceResponse);
     } else {
