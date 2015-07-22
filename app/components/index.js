@@ -95,7 +95,7 @@ const Index = React.createClass({
               <th>Remaining (km)</th>
               <th>Current Speed (km/h)</th>
               <th>Avg (km/h)</th>
-              <th>General Pos</th>
+              <th>Rank</th>
               <th>Gap to Yellow Jer.</th>
               <th>Live Gap to Yellow Jer.</th>
             </thead>

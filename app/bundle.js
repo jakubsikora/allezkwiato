@@ -23871,7 +23871,7 @@
 	            _react2['default'].createElement(
 	              'th',
 	              null,
-	              'General Pos'
+	              'Rank'
 	            ),
 	            _react2['default'].createElement(
 	              'th',
