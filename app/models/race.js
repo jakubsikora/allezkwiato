@@ -136,6 +136,8 @@ class Race extends Backbone.Model {
   }
 
   parse(response) {
+    this.set({riders: []});
+    this.set({nonTrackedRiders: []});
     this.parseRiders(response);
   }
 

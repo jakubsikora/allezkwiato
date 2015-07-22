@@ -23921,6 +23921,8 @@
 	              null,
 	              'No tracking data at the moment (',
 	              nonTrackedRiders.length,
+	              ' / ',
+	              riders.length + nonTrackedRiders.length,
 	              ')'
 	            )
 	          ),
@@ -24146,6 +24148,8 @@
 	  }, {
 	    key: 'parse',
 	    value: function parse(response) {
+	      this.set({ riders: [] });
+	      this.set({ nonTrackedRiders: [] });
 	      this.parseRiders(response);
 	    }
 	  }, {

@@ -117,7 +117,7 @@ const Index = React.createClass({
         <div className="table-responsive table-non-trackers">
           <table className="table table-bordered table-striped table-condensed">
             <thead>
-              <th>No tracking data at the moment ({nonTrackedRiders.length})</th>
+              <th>No tracking data at the moment ({nonTrackedRiders.length} / {riders.length + nonTrackedRiders.length})</th>
             </thead>
             <tbody className="non-tracker">
               {nonTrackedRows}
