@@ -23919,7 +23919,7 @@
 	            _react2['default'].createElement(
 	              'th',
 	              null,
-	              'Riders without tracker (',
+	              'No tracking data at the moment (',
 	              nonTrackedRiders.length,
 	              ')'
 	            )
