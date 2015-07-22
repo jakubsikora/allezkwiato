@@ -24150,6 +24150,7 @@
 	    value: function parse(response) {
 	      this.set({ riders: [] });
 	      this.set({ nonTrackedRiders: [] });
+	      this.set({ ridersDetails: [] });
 	      this.parseRiders(response);
 	    }
 	  }, {
