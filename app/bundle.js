@@ -23773,7 +23773,6 @@
 	    var totalDistance = this.props.data.distanceToFinish + this.props.data.distanceFromStart;
 	    var percentToFinish = this.props.data.distanceToFinish / totalDistance * 100;
 	    percentToFinish = percentToFinish.toFixed(0);
-	    console.log(percentToFinish);
 
 	    var distanceStyle = {
 	      right: percentToFinish + '%'

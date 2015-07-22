@@ -71,7 +71,6 @@ const Index = React.createClass({
     const totalDistance = this.props.data.distanceToFinish + this.props.data.distanceFromStart;
     let percentToFinish = this.props.data.distanceToFinish / totalDistance * 100;
     percentToFinish = percentToFinish.toFixed(0);
-    console.log(percentToFinish);
 
     const distanceStyle = {
       right: percentToFinish + "%"
