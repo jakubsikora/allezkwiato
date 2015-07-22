@@ -23783,6 +23783,13 @@
 	          _react2['default'].createElement(
 	            'span',
 	            null,
+	            ' Tracking: ',
+	            riders.length,
+	            ' riders, '
+	          ),
+	          _react2['default'].createElement(
+	            'span',
+	            null,
 	            ' Race speed: ',
 	            this.props.data.speed.toFixed(2),
 	            ' km/h, '
@@ -24116,22 +24123,21 @@
 	        });
 	      }
 
-	      if (that.get('nonTrackedRiders').length === 0) {
-	        that.getNonTrackedRiders();
-	      }
+	      that.getNonTrackedRiders();
 	    }
 	  }, {
 	    key: 'getNonTrackedRiders',
 	    value: function getNonTrackedRiders() {
 	      var allRiders = this.get('ridersCache');
 	      var trackedRiders = this.get('ridersDetails');
+	      var nonTrackedRiders = [];
 
 	      var bIds = {};
 	      trackedRiders.forEach(function (obj) {
 	        bIds[obj.Id] = obj;
 	      });
 
-	      var nonTrackedRiders = allRiders.filter(function (obj) {
+	      nonTrackedRiders = allRiders.filter(function (obj) {
 	        return !(obj.Id in bIds) && !obj.IsWithdrawn;
 	      });
 

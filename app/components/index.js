@@ -73,6 +73,7 @@ const Index = React.createClass({
         <div className="panel-heading">
           <h3 className="panel-title">
             <img src="/img/flash.gif" />
+            <span> Tracking: {riders.length} riders, </span>
             <span> Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
             <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
             <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km </span>

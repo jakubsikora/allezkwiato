@@ -115,21 +115,20 @@ class Race extends Backbone.Model {
       });
     }
 
-    if (that.get('nonTrackedRiders').length === 0) {
-      that.getNonTrackedRiders();
-    }
+    that.getNonTrackedRiders();
   }
 
   getNonTrackedRiders() {
     const allRiders = this.get('ridersCache');
     const trackedRiders = this.get('ridersDetails');
+    let nonTrackedRiders = [];
 
     let bIds = {};
     trackedRiders.forEach(function(obj){
       bIds[obj.Id] = obj;
     });
 
-    let nonTrackedRiders = allRiders.filter(function(obj){
+    nonTrackedRiders = allRiders.filter(function(obj){
       return !(obj.Id in bIds) && !obj.IsWithdrawn;
     });
 
