@@ -23641,7 +23641,7 @@
 
 	var _modelsRace2 = _interopRequireDefault(_modelsRace);
 
-	var _modelsRider = __webpack_require__(203);
+	var _modelsRider = __webpack_require__(200);
 
 	var _modelsRider2 = _interopRequireDefault(_modelsRider);
 
@@ -23944,11 +23944,11 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _backbone = __webpack_require__(200);
+	var _backbone = __webpack_require__(201);
 
 	var _backbone2 = _interopRequireDefault(_backbone);
 
-	var _rider = __webpack_require__(203);
+	var _rider = __webpack_require__(200);
 
 	var _rider2 = _interopRequireDefault(_rider);
 
@@ -23973,7 +23973,10 @@
 	        distanceToFinish: 0,
 	        distanceFromStart: 0,
 	        riders: [],
-	        leaderGap: null
+	        ridersDetails: [],
+	        leaderGap: null,
+	        ridersCache: [],
+	        nonTrackedRiders: []
 	      };
 	    }
 	  }, {
@@ -23982,74 +23985,113 @@
 	  }, {
 	    key: 'urlRoot',
 	    value: function urlRoot() {
-	      //return "http://localhost:3000/race.json";
-	      return 'https://letour-livetracking-api.dimensiondata.com/race/';
+	      return 'http://localhost:3000/race.json';
+	      //return 'http://letour-livetracking-api.dimensiondata.com/race/';
+	    }
+	  }, {
+	    key: 'parseRiders',
+	    value: function parseRiders(raceResponse) {
+	      var that = this;
+	      var ridersCache = that.get('ridersCache');
+
+	      if (ridersCache.length) {
+	        that.parseRace(ridersCache, raceResponse);
+	      } else {
+	        ridersObj.fetch().then(function (ridersRes) {
+	          that.set({ ridersCache: ridersRes });
+	          that.parseRace(ridersRes, raceResponse);
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'parseRace',
+	    value: function parseRace(ridersRes, raceResponse) {
+	      var groups = raceResponse.Groups;
+	      var that = this;
+	      var ridersArr = [];
+
+	      that.set({ currentTime: raceResponse.TimeStampEpochInt });
+	      that.set({ speed: raceResponse.RaceSpeed });
+	      that.set({ maxSpeed: raceResponse.RaceMaxSpeed });
+	      that.set({ distanceToFinish: raceResponse.RaceDistanceToFinish });
+	      that.set({ distanceFromStart: raceResponse.RaceDistanceFromStart });
+
+	      // FIXME: nasty! load the leader first
+	      groups.forEach(function (group) {
+	        group.Riders.forEach(function (item) {
+	          if (item.HasYellowJersey) {
+	            var riderDetails = {};
+	            riderDetails = that.lookupRider(ridersRes, item.Id);
+	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
+
+	            var generalClass = riderDetails.GeneralClassification.split(', ');
+	            riderDetails.generalPos = generalClass[0];
+	            riderDetails.generalGap = generalClass[1];
+
+	            that.set({ leaderGap: riderDetails.gap });
+	            riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+
+	            var rider = jQuery.extend({}, item, riderDetails);
+	            ridersArr.push(rider);
+	          }
+	        });
+	      });
+
+	      groups.forEach(function (group) {
+	        group.Riders.forEach(function (item) {
+	          if (!item.HasYellowJersey) {
+	            var riderDetails = {};
+	            riderDetails = that.lookupRider(ridersRes, item.Id);
+	            riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
+
+	            var generalClass = riderDetails.GeneralClassification.split(', ');
+	            riderDetails.generalPos = generalClass[0];
+	            riderDetails.generalGap = generalClass[1];
+
+	            riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+
+	            var rider = jQuery.extend({}, item, riderDetails);
+	            ridersArr.push(rider);
+	          }
+	        });
+	      });
+
+	      ridersArr = sortByKey(ridersArr, 'PositionInTheRace');
+	      that.set({ riders: ridersArr });
+
+	      function sortByKey(array, key) {
+	        return array.sort(function (a, b) {
+	          var x = a[key];
+	          var y = b[key];
+	          return x < y ? -1 : x > y ? 1 : 0;
+	        });
+	      }
+
+	      if (that.get('nonTrackedRiders').length === 0) {
+	        that.getNonTrackedRiders();
+	      }
+	    }
+	  }, {
+	    key: 'getNonTrackedRiders',
+	    value: function getNonTrackedRiders() {
+	      var allRiders = this.get('ridersCache');
+	      var trackedRiders = this.get('ridersDetails');
+
+	      var bIds = {};
+	      trackedRiders.forEach(function (obj) {
+	        bIds[obj.Id] = obj;
+	      });
+
+	      var nonTrackedRiders = allRiders.filter(function (obj) {
+	        return !(obj.Id in bIds) && !obj.IsWithdrawn;
+	      });
+
+	      this.set({ nonTrackedRiders: nonTrackedRiders });
 	    }
 	  }, {
 	    key: 'parse',
 	    value: function parse(response) {
-	      var that = this;
-	      ridersObj.fetch().then(function (ridersRes) {
-	        var groups = response.Groups;
-	        var ridersArr = [];
-
-	        that.set({ currentTime: response.TimeStampEpochInt });
-	        that.set({ speed: response.RaceSpeed });
-	        that.set({ maxSpeed: response.RaceMaxSpeed });
-	        that.set({ distanceToFinish: response.RaceDistanceToFinish });
-	        that.set({ distanceFromStart: response.RaceDistanceFromStart });
-
-	        // FIXME: nasty! load the leader first
-	        groups.forEach(function (group) {
-	          group.Riders.forEach(function (item) {
-	            if (item.HasYellowJersey) {
-	              var riderDetails = {};
-	              riderDetails = that.lookupRider(ridersRes, item.Id);
-	              riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
-
-	              var generalClass = riderDetails.GeneralClassification.split(', ');
-	              riderDetails.generalPos = generalClass[0];
-	              riderDetails.generalGap = generalClass[1];
-
-	              that.set({ leaderGap: riderDetails.gap });
-	              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
-
-	              var rider = jQuery.extend({}, item, riderDetails);
-	              ridersArr.push(rider);
-	            }
-	          });
-	        });
-
-	        groups.forEach(function (group) {
-	          group.Riders.forEach(function (item) {
-	            if (!item.HasYellowJersey) {
-	              var riderDetails = {};
-	              riderDetails = that.lookupRider(ridersRes, item.Id);
-	              riderDetails.gap = group.GapToLeadingGroupT === 0 ? null : that.formatGap(group.GapToLeadingGroupT);
-
-	              var generalClass = riderDetails.GeneralClassification.split(', ');
-	              riderDetails.generalPos = generalClass[0];
-	              riderDetails.generalGap = generalClass[1];
-
-	              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
-
-	              var rider = jQuery.extend({}, item, riderDetails);
-	              ridersArr.push(rider);
-	            }
-	          });
-	        });
-
-	        ridersArr = sortByKey(ridersArr, 'PositionInTheRace');
-	        that.set({ riders: ridersArr });
-
-	        function sortByKey(array, key) {
-	          return array.sort(function (a, b) {
-	            var x = a[key];
-	            var y = b[key];
-	            return x < y ? -1 : x > y ? 1 : 0;
-	          });
-	        }
-	      });
+	      this.parseRiders(response);
 	    }
 	  }, {
 	    key: 'calculateLiveGap',
@@ -24095,9 +24137,18 @@
 	  }, {
 	    key: 'lookupRider',
 	    value: function lookupRider(riders, id) {
-	      return riders.filter(function (rider) {
+	      var returnRider = {};
+	      var tempRiders = [];
+
+	      returnRider = riders.filter(function (rider) {
 	        return rider.Id === id;
 	      })[0];
+
+	      tempRiders = this.get('ridersDetails');
+	      tempRiders.push(returnRider);
+	      this.set({ ridersDetails: tempRiders });
+
+	      return returnRider;
 	    }
 	  }]);
 
@@ -24109,6 +24160,81 @@
 
 /***/ },
 /* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _backbone = __webpack_require__(201);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var Rider = (function (_Backbone$Model) {
+	  _inherits(Rider, _Backbone$Model);
+
+	  function Rider() {
+	    _classCallCheck(this, Rider);
+
+	    _get(Object.getPrototypeOf(Rider.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  return Rider;
+	})(_backbone2['default'].Model);
+
+	var Riders = (function (_Backbone$Collection) {
+	  _inherits(Riders, _Backbone$Collection);
+
+	  function Riders(options) {
+	    _classCallCheck(this, Riders);
+
+	    _get(Object.getPrototypeOf(Riders.prototype), 'constructor', this).call(this, options);
+	    this.model = Rider;
+	  }
+
+	  _createClass(Riders, [{
+	    key: 'initialize',
+	    value: function initialize() {}
+	  }, {
+	    key: 'detailsById',
+	    value: function detailsById(id) {
+	      return this.models.filter(function (item) {
+	        return item.attributes.Id === id;
+	      });
+	    }
+	  }, {
+	    key: 'url',
+
+	    // TODO: parser for custom properties
+
+	    value: function url() {
+	      //return "http://localhost:3000/rider.json";
+	      return 'https://letour-livetracking-api.dimensiondata.com/rider';
+	    }
+	  }]);
+
+	  return Riders;
+	})(_backbone2['default'].Collection);
+
+	exports['default'] = Riders;
+	module.exports = exports['default'];
+
+	// TODO: properties
+
+/***/ },
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {//     Backbone.js 1.2.1
@@ -24127,7 +24253,7 @@
 
 	  // Set up Backbone appropriately for the environment. Start with AMD.
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(201), __webpack_require__(202), exports], __WEBPACK_AMD_DEFINE_RESULT__ = function(_, $, exports) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(202), __webpack_require__(203), exports], __WEBPACK_AMD_DEFINE_RESULT__ = function(_, $, exports) {
 	      // Export global even in AMD case in case this script is loaded with
 	      // others that may still expect a global Backbone.
 	      root.Backbone = factory(root, exports, _, $);
@@ -25988,7 +26114,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
@@ -27542,7 +27668,7 @@
 
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -36756,81 +36882,6 @@
 
 	}));
 
-
-/***/ },
-/* 203 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _backbone = __webpack_require__(200);
-
-	var _backbone2 = _interopRequireDefault(_backbone);
-
-	var Rider = (function (_Backbone$Model) {
-	  _inherits(Rider, _Backbone$Model);
-
-	  function Rider() {
-	    _classCallCheck(this, Rider);
-
-	    _get(Object.getPrototypeOf(Rider.prototype), 'constructor', this).apply(this, arguments);
-	  }
-
-	  return Rider;
-	})(_backbone2['default'].Model);
-
-	var Riders = (function (_Backbone$Collection) {
-	  _inherits(Riders, _Backbone$Collection);
-
-	  function Riders(options) {
-	    _classCallCheck(this, Riders);
-
-	    _get(Object.getPrototypeOf(Riders.prototype), 'constructor', this).call(this, options);
-	    this.model = Rider;
-	  }
-
-	  _createClass(Riders, [{
-	    key: 'initialize',
-	    value: function initialize() {}
-	  }, {
-	    key: 'detailsById',
-	    value: function detailsById(id) {
-	      return this.models.filter(function (item) {
-	        return item.attributes.Id === id;
-	      });
-	    }
-	  }, {
-	    key: 'url',
-
-	    // TODO: parser for custom properties
-
-	    value: function url() {
-	      //return "http://localhost:3000/rider.json";
-	      return 'https://letour-livetracking-api.dimensiondata.com/rider';
-	    }
-	  }]);
-
-	  return Riders;
-	})(_backbone2['default'].Collection);
-
-	exports['default'] = Riders;
-	module.exports = exports['default'];
-
-	// TODO: properties
 
 /***/ }
 /******/ ]);

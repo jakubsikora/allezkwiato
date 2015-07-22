@@ -15,7 +15,10 @@ class Race extends Backbone.Model {
       distanceToFinish: 0,
       distanceFromStart: 0,
       riders: [],
-      leaderGap: null
+      ridersDetails: [],
+      leaderGap: null,
+      ridersCache: [],
+      nonTrackedRiders: []
     };
   }
 
@@ -23,86 +26,116 @@ class Race extends Backbone.Model {
 
   }
 
-
   urlRoot() {
-      //return "http://localhost:3000/race.json";
-      return 'https://letour-livetracking-api.dimensiondata.com/race/';
+      return "http://localhost:3000/race.json";
+      //return 'http://letour-livetracking-api.dimensiondata.com/race/';
+  }
+
+  parseRiders(raceResponse) {
+    const that = this;
+    const ridersCache = that.get('ridersCache');
+
+    if (ridersCache.length) {
+      that.parseRace(ridersCache, raceResponse);
+    } else {
+      ridersObj
+        .fetch()
+        .then(function(ridersRes) {
+          that.set({ridersCache: ridersRes});
+          that.parseRace(ridersRes, raceResponse);
+        });
+    }
+  }
+
+  parseRace(ridersRes, raceResponse) {
+    const groups = raceResponse.Groups;
+    const that = this;
+    let ridersArr = [];
+
+    that.set({currentTime: raceResponse.TimeStampEpochInt});
+    that.set({speed: raceResponse.RaceSpeed});
+    that.set({maxSpeed: raceResponse.RaceMaxSpeed});
+    that.set({distanceToFinish: raceResponse.RaceDistanceToFinish});
+    that.set({distanceFromStart: raceResponse.RaceDistanceFromStart});
+
+    // FIXME: nasty! load the leader first
+    groups.forEach(function(group) {
+      group.Riders.forEach(function(item) {
+        if (item.HasYellowJersey) {
+          let riderDetails = {};
+          riderDetails = that.lookupRider(ridersRes, item.Id);
+          riderDetails.gap = group.GapToLeadingGroupT === 0
+            ? null
+            : that.formatGap(group.GapToLeadingGroupT);
+
+          const generalClass = riderDetails.GeneralClassification.split(', ');
+          riderDetails.generalPos = generalClass[0];
+          riderDetails.generalGap = generalClass[1];
+
+          that.set({leaderGap: riderDetails.gap});
+          riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+
+          const rider = jQuery.extend({}, item, riderDetails);
+          ridersArr.push(rider);
+        }
+      })
+    });
+
+    groups.forEach(function(group) {
+      group.Riders.forEach(function(item) {
+        if (!item.HasYellowJersey) {
+          let riderDetails = {};
+          riderDetails = that.lookupRider(ridersRes, item.Id);
+          riderDetails.gap = group.GapToLeadingGroupT === 0
+            ? null
+            : that.formatGap(group.GapToLeadingGroupT);
+
+          const generalClass = riderDetails.GeneralClassification.split(', ');
+          riderDetails.generalPos = generalClass[0];
+          riderDetails.generalGap = generalClass[1];
+
+          riderDetails.liveGap = that.calculateLiveGap(riderDetails);
+
+          const rider = jQuery.extend({}, item, riderDetails);
+          ridersArr.push(rider);
+        }
+      })
+    });
+
+    ridersArr = sortByKey(ridersArr, 'PositionInTheRace');
+    that.set({riders: ridersArr});
+
+    function sortByKey(array, key) {
+      return array.sort(function(a, b) {
+        const x = a[key];
+        const y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      });
+    }
+
+    if (that.get('nonTrackedRiders').length === 0) {
+      that.getNonTrackedRiders();
+    }
+  }
+
+  getNonTrackedRiders() {
+    const allRiders = this.get('ridersCache');
+    const trackedRiders = this.get('ridersDetails');
+
+    let bIds = {};
+    trackedRiders.forEach(function(obj){
+      bIds[obj.Id] = obj;
+    });
+
+    let nonTrackedRiders = allRiders.filter(function(obj){
+      return !(obj.Id in bIds) && !obj.IsWithdrawn;
+    });
+
+    this.set({nonTrackedRiders: nonTrackedRiders});
   }
 
   parse(response) {
-    const that = this;
-    ridersObj
-      .fetch()
-      .then(function(ridersRes) {
-        const groups = response.Groups;
-        let ridersArr = [];
-
-        that.set({currentTime: response.TimeStampEpochInt});
-        that.set({speed: response.RaceSpeed});
-        that.set({maxSpeed: response.RaceMaxSpeed});
-        that.set({distanceToFinish: response.RaceDistanceToFinish});
-        that.set({distanceFromStart: response.RaceDistanceFromStart});
-
-        // FIXME: nasty! load the leader first
-        groups.forEach(function(group) {
-          group.Riders.forEach(function(item) {
-            if (item.HasYellowJersey) {
-              let riderDetails = {};
-              riderDetails = that.lookupRider(ridersRes, item.Id);
-              riderDetails.gap = group.GapToLeadingGroupT === 0
-                ? null
-                : that.formatGap(group.GapToLeadingGroupT);
-
-              const generalClass = riderDetails.GeneralClassification.split(', ');
-              riderDetails.generalPos = generalClass[0];
-              riderDetails.generalGap = generalClass[1];
-
-              that.set({leaderGap: riderDetails.gap});
-              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
-
-              const rider = jQuery.extend({}, item, riderDetails);
-              ridersArr.push(rider);
-            }
-          })
-        });
-
-
-
-        groups.forEach(function(group) {
-          group.Riders.forEach(function(item) {
-            if (!item.HasYellowJersey) {
-              let riderDetails = {};
-              riderDetails = that.lookupRider(ridersRes, item.Id);
-              riderDetails.gap = group.GapToLeadingGroupT === 0
-                ? null
-                : that.formatGap(group.GapToLeadingGroupT);
-
-              const generalClass = riderDetails.GeneralClassification.split(', ');
-              riderDetails.generalPos = generalClass[0];
-              riderDetails.generalGap = generalClass[1];
-
-              riderDetails.liveGap = that.calculateLiveGap(riderDetails);
-
-              const rider = jQuery.extend({}, item, riderDetails);
-              ridersArr.push(rider);
-
-            }
-          })
-        });
-
-        ridersArr = sortByKey(ridersArr, 'PositionInTheRace');
-        that.set({riders: ridersArr});
-
-        function sortByKey(array, key) {
-          return array.sort(function(a, b) {
-            const x = a[key];
-            const y = b[key];
-            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-          });
-        }
-
-
-      });
+    this.parseRiders(response);
   }
 
   calculateLiveGap(rider) {
@@ -145,9 +178,18 @@ class Race extends Backbone.Model {
   }
 
   lookupRider(riders, id) {
-    return riders.filter(function(rider) {
+    let returnRider = {};
+    let tempRiders = [];
+
+    returnRider = riders.filter(function(rider) {
       return rider.Id === id;
     })[0];
+
+    tempRiders = this.get('ridersDetails');
+    tempRiders.push(returnRider);
+    this.set({ridersDetails: tempRiders});
+
+    return returnRider;
   }
 }
 
