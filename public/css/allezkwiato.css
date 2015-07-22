@@ -72,3 +72,16 @@ tr.yellow {
 .non-tracker td {
   text-align: left;
 }
+
+.distance-indicator-line {
+  height: 2px;
+  width: 100%;
+  background: #000;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.distance-indicator {
+  position: absolute;
+  bottom: 0px;
+}

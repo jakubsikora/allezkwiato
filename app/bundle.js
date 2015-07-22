@@ -23770,6 +23770,15 @@
 	      }
 	    });
 
+	    var totalDistance = this.props.data.distanceToFinish + this.props.data.distanceFromStart;
+	    var percentToFinish = this.props.data.distanceToFinish / totalDistance * 100;
+	    percentToFinish = percentToFinish.toFixed(0);
+	    console.log(percentToFinish);
+
+	    var distanceStyle = {
+	      right: percentToFinish + '%'
+	    };
+
 	    return _react2['default'].createElement(
 	      'div',
 	      { className: 'panel panel-default' },
@@ -23814,6 +23823,19 @@
 	      _react2['default'].createElement(
 	        'div',
 	        { className: 'panel-body' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'distance-indicator-line' },
+	            _react2['default'].createElement(
+	              'div',
+	              { className: 'distance-indicator', style: distanceStyle },
+	              _react2['default'].createElement('img', { src: '/img/bike.png', width: '25' })
+	            )
+	          )
+	        ),
 	        _react2['default'].createElement(
 	          'div',
 	          { className: 'row' },
