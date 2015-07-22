@@ -26,8 +26,17 @@ const Index = React.createClass({
       if (filterText && lastName.indexOf(filterText) === -1) {
         return;
       } else {
+        let leader = false;
+
+        if (rider.liveGap.charAt(0) === '-') {
+          leader = true;
+        } else if (rider.HasYellowJersey) {
+          leader = true;
+        } else {
+          leader = false;
+        }
         return (
-          <tr key={index} className={rider.HasYellowJersey ? 'yellow' : null}>
+          <tr key={index} className={leader ? 'yellow' : null}>
             <td>{rider.PositionInTheRace}</td>
             <td><img src={rider.PhotoUri} height="30" /></td>
             <td>{rider.FirstName}</td>

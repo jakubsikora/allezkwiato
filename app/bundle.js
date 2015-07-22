@@ -23671,9 +23671,18 @@
 	      if (filterText && lastName.indexOf(filterText) === -1) {
 	        return;
 	      } else {
+	        var leader = false;
+
+	        if (rider.liveGap.charAt(0) === '-') {
+	          leader = true;
+	        } else if (rider.HasYellowJersey) {
+	          leader = true;
+	        } else {
+	          leader = false;
+	        }
 	        return _react2['default'].createElement(
 	          'tr',
-	          { key: index, className: rider.HasYellowJersey ? 'yellow' : null },
+	          { key: index, className: leader ? 'yellow' : null },
 	          _react2['default'].createElement(
 	            'td',
 	            null,
@@ -24158,19 +24167,22 @@
 	  }, {
 	    key: 'formatGap',
 	    value: function formatGap(time) {
-	      var hours = Math.floor(time / 3600);
-	      time = time - hours * 3600;
-	      var minutes = Math.floor(time / 60);
-	      var seconds = time - minutes * 60;
+	      var negative = false;
+	      var strTime = '';
 
-	      minutes = minutes.toFixed(0);
-	      seconds = seconds.toFixed(0);
+	      if (time < 0) {
+	        negative = true;
+	        time = -1 * time;
+	      }
 
-	      hours = hours < 10 ? '0' + hours : hours;
-	      minutes = minutes < 10 ? '0' + minutes : minutes;
-	      seconds = seconds < 10 ? '0' + seconds : seconds;
+	      time = Number(time);
+	      var h = Math.floor(time / 3600);
+	      var m = Math.floor(time % 3600 / 60);
+	      var s = Math.floor(time % 3600 % 60);
 
-	      return hours + ':' + minutes + ':' + seconds;
+	      strTime = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+
+	      return (negative ? '-' : '') + strTime;
 	    }
 	  }, {
 	    key: 'lookupRider',

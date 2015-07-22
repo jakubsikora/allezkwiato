@@ -27,8 +27,8 @@ class Race extends Backbone.Model {
   }
 
   urlRoot() {
-      //return "http://localhost:3000/race.json";
-      return 'http://letour-livetracking-api.dimensiondata.com/race/';
+    //return "http://localhost:3000/race.json";
+    return 'http://letour-livetracking-api.dimensiondata.com/race/';
   }
 
   parseRiders(raceResponse) {
@@ -164,19 +164,24 @@ class Race extends Backbone.Model {
   }
 
   formatGap(time) {
-    let hours = Math.floor(time / 3600);
-    time = time - hours * 3600;
-    let minutes = Math.floor(time / 60);
-    let seconds = time - minutes * 60;
+    let negative = false;
+    let strTime = '';
 
-    minutes = minutes.toFixed(0);
-    seconds = seconds.toFixed(0);
+    if (time < 0) {
+      negative = true;
+      time = -1 * time;
+    }
 
-    hours = (hours < 10 ? '0' + hours : hours);
-    minutes = (minutes < 10 ? '0' + minutes : minutes);
-    seconds = (seconds < 10 ? '0' + seconds : seconds);
+    time = Number(time);
+    let h = Math.floor(time / 3600);
+    let m = Math.floor(time % 3600 / 60);
+    let s = Math.floor(time % 3600 % 60);
 
-    return hours + ':' + minutes + ':' + seconds;
+    strTime = (h < 10 ? '0' : '') + h + ':' +
+      (m < 10 ? '0' : '') + m + ':' +
+      (s < 10 ? '0' : '') + s;
+
+    return (negative ? '-' : '') + strTime;
   }
 
   lookupRider(riders, id) {
