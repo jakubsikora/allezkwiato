@@ -19,38 +19,55 @@ const Index = React.createClass({
   },
   render() {
     const riders = this.props.data.riders;
+    const nonTrackedRiders = this.props.data.nonTrackedRiders;
     const filterText = this.state.filterText;
     const rows = riders.map(function(rider, index) {
-        const lastName = rider.LastName.toLowerCase();
-        if (filterText && lastName.indexOf(filterText) === -1) {
-          return;
-        } else {
-          return (
-            <tr key={index}>
-              <td>{rider.PositionInTheRace}</td>
-              <td><img src={rider.PhotoUri} height="40" /></td>
-              <td>{rider.FirstName}</td>
-              <td>{rider.LastName}</td>
-              <td>{rider.TeamCode}</td>
-              <td>{rider.gap}</td>
-              <td>{rider.DistanceToFinish.toFixed(2)}</td>
-              <td>{rider.CurrentSpeed}</td>
-              <td>{rider.AverageSpeed}</td>
-              <td>{rider.generalPos}</td>
-              <td>{rider.generalGap}</td>
-              <td>{rider.liveGap}</td>
-            </tr>
-          );
-        }
-      });
+      const lastName = rider.LastName.toLowerCase();
+      if (filterText && lastName.indexOf(filterText) === -1) {
+        return;
+      } else {
+        return (
+          <tr key={index} className={rider.HasYellowJersey ? 'yellow' : null}>
+            <td>{rider.PositionInTheRace}</td>
+            <td><img src={rider.PhotoUri} height="30" /></td>
+            <td>{rider.FirstName}</td>
+            <td>{rider.LastName}</td>
+            <td>{rider.TeamCode}</td>
+            <td>{rider.gap}</td>
+            <td>{rider.DistanceToFinish.toFixed(2)}</td>
+            <td>{rider.CurrentSpeed}</td>
+            <td>{rider.AverageSpeed}</td>
+            <td>{rider.generalPos}</td>
+            <td>{rider.generalGap}</td>
+            <td>{rider.liveGap}</td>
+          </tr>
+        );
+      }
+    });
+
+    const nonTrackedRows = nonTrackedRiders.map(function(rider, index) {
+      const lastName = rider.LastName.toLowerCase();
+      if (filterText && lastName.indexOf(filterText) === -1) {
+        return;
+      } else {
+        return (
+          <tr key={index}>
+            <td><img src={rider.PhotoUri} height="30" />
+              {rider.FirstName} {rider.LastName} ({rider.TeamCode})</td>
+          </tr>
+        );
+      }
+    });
 
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
           <h3 className="panel-title">
-            <span>Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
+            <img src="/img/flash.gif" />
+            <span> Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
             <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
-            <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km</span>
+            <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km </span>
+            <img src="/img/flash.gif" />
           </h3>
         </div>
         <div className="panel-body">
@@ -79,11 +96,21 @@ const Index = React.createClass({
               <th>Current Speed (km/h)</th>
               <th>Avg (km/h)</th>
               <th>General Pos</th>
-              <th>General Gap</th>
-              <th>Live General Gap</th>
+              <th>Gap to Yellow Jer.</th>
+              <th>Live Gap to Yellow Jer.</th>
             </thead>
             <tbody>
               {rows}
+            </tbody>
+          </table>
+        </div>
+        <div className="table-responsive table-non-trackers">
+          <table className="table table-bordered table-striped table-condensed">
+            <thead>
+              <th>Riders without tracker</th>
+            </thead>
+            <tbody className="non-tracker">
+              {nonTrackedRows}
             </tbody>
           </table>
         </div>
@@ -95,18 +122,6 @@ const Index = React.createClass({
 function connectToRace(Component, race) {
   const raceConnection = React.createClass({
     getInitialState() {
-      // return riders
-      //   .fetch()
-      //   .then(function(response) {
-      //     return race
-      //       .fetch()
-      //       .then(function(res) {
-      //         return {
-      //           data: res
-      //         };
-      //       })
-      //   });
-
       this.liveReload();
 
       return {

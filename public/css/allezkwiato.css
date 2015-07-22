@@ -20,8 +20,8 @@ table {
 }
 
 .intro-header {
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   text-align: center;
   background: url(https://upload.wikimedia.org/wikipedia/commons/8/8f/Bradley_Wiggins_Mark_Cavendish_-_2012_Tour_de_France.jpg) center center/cover no-repeat;
   min-height: 100vh
@@ -51,6 +51,24 @@ table {
 }
 
 .table-responsive {
-  max-height: 480px;
+  max-height: 350px;
   overflow: auto;
+}
+
+.table-non-trackers {
+  margin-top: 20px;
+}
+
+th {
+  text-align: center;
+  background: #000;
+  color: #FFF;
+}
+
+tr.yellow {
+  background-color: #FDD21B;
+}
+
+.non-tracker td {
+  text-align: left;
 }

@@ -23664,6 +23664,7 @@
 	  },
 	  render: function render() {
 	    var riders = this.props.data.riders;
+	    var nonTrackedRiders = this.props.data.nonTrackedRiders;
 	    var filterText = this.state.filterText;
 	    var rows = riders.map(function (rider, index) {
 	      var lastName = rider.LastName.toLowerCase();
@@ -23672,7 +23673,7 @@
 	      } else {
 	        return _react2['default'].createElement(
 	          'tr',
-	          { key: index },
+	          { key: index, className: rider.HasYellowJersey ? 'yellow' : null },
 	          _react2['default'].createElement(
 	            'td',
 	            null,
@@ -23681,7 +23682,7 @@
 	          _react2['default'].createElement(
 	            'td',
 	            null,
-	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '40' })
+	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '30' })
 	          ),
 	          _react2['default'].createElement(
 	            'td',
@@ -23737,6 +23738,29 @@
 	      }
 	    });
 
+	    var nonTrackedRows = nonTrackedRiders.map(function (rider, index) {
+	      var lastName = rider.LastName.toLowerCase();
+	      if (filterText && lastName.indexOf(filterText) === -1) {
+	        return;
+	      } else {
+	        return _react2['default'].createElement(
+	          'tr',
+	          { key: index },
+	          _react2['default'].createElement(
+	            'td',
+	            null,
+	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '30' }),
+	            rider.FirstName,
+	            ' ',
+	            rider.LastName,
+	            ' (',
+	            rider.TeamCode,
+	            ')'
+	          )
+	        );
+	      }
+	    });
+
 	    return _react2['default'].createElement(
 	      'div',
 	      { className: 'panel panel-default' },
@@ -23746,10 +23770,11 @@
 	        _react2['default'].createElement(
 	          'h3',
 	          { className: 'panel-title' },
+	          _react2['default'].createElement('img', { src: '/img/flash.gif' }),
 	          _react2['default'].createElement(
 	            'span',
 	            null,
-	            'Race speed: ',
+	            ' Race speed: ',
 	            this.props.data.speed.toFixed(2),
 	            ' km/h, '
 	          ),
@@ -23765,8 +23790,9 @@
 	            null,
 	            'Current distance: ',
 	            this.props.data.distanceFromStart.toFixed(2),
-	            ' km'
-	          )
+	            ' km '
+	          ),
+	          _react2['default'].createElement('img', { src: '/img/flash.gif' })
 	        )
 	      ),
 	      _react2['default'].createElement(
@@ -23850,18 +23876,40 @@
 	            _react2['default'].createElement(
 	              'th',
 	              null,
-	              'General Gap'
+	              'Gap to Yellow Jer.'
 	            ),
 	            _react2['default'].createElement(
 	              'th',
 	              null,
-	              'Live General Gap'
+	              'Live Gap to Yellow Jer.'
 	            )
 	          ),
 	          _react2['default'].createElement(
 	            'tbody',
 	            null,
 	            rows
+	          )
+	        )
+	      ),
+	      _react2['default'].createElement(
+	        'div',
+	        { className: 'table-responsive table-non-trackers' },
+	        _react2['default'].createElement(
+	          'table',
+	          { className: 'table table-bordered table-striped table-condensed' },
+	          _react2['default'].createElement(
+	            'thead',
+	            null,
+	            _react2['default'].createElement(
+	              'th',
+	              null,
+	              'Riders without tracker'
+	            )
+	          ),
+	          _react2['default'].createElement(
+	            'tbody',
+	            { className: 'non-tracker' },
+	            nonTrackedRows
 	          )
 	        )
 	      )
@@ -23874,18 +23922,6 @@
 	    displayName: 'raceConnection',
 
 	    getInitialState: function getInitialState() {
-	      // return riders
-	      //   .fetch()
-	      //   .then(function(response) {
-	      //     return race
-	      //       .fetch()
-	      //       .then(function(res) {
-	      //         return {
-	      //           data: res
-	      //         };
-	      //       })
-	      //   });
-
 	      this.liveReload();
 
 	      return {
@@ -23985,8 +24021,8 @@
 	  }, {
 	    key: 'urlRoot',
 	    value: function urlRoot() {
-	      return 'http://localhost:3000/race.json';
-	      //return 'http://letour-livetracking-api.dimensiondata.com/race/';
+	      //return "http://localhost:3000/race.json";
+	      return 'http://letour-livetracking-api.dimensiondata.com/race/';
 	    }
 	  }, {
 	    key: 'parseRiders',
@@ -24221,7 +24257,7 @@
 
 	    value: function url() {
 	      //return "http://localhost:3000/rider.json";
-	      return 'https://letour-livetracking-api.dimensiondata.com/rider';
+	      return 'http://letour-livetracking-api.dimensiondata.com/rider';
 	    }
 	  }]);
 
