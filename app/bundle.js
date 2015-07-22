@@ -23673,7 +23673,7 @@
 	      } else {
 	        var leader = false;
 
-	        if (rider.liveGap.charAt(0) === '-') {
+	        if (rider.liveGap && rider.liveGap.charAt(0) === '-') {
 	          leader = true;
 	        } else if (rider.HasYellowJersey) {
 	          leader = true;
@@ -23912,7 +23912,9 @@
 	            _react2['default'].createElement(
 	              'th',
 	              null,
-	              'Riders without tracker'
+	              'Riders without tracker (',
+	              nonTrackedRiders.length,
+	              ')'
 	            )
 	          ),
 	          _react2['default'].createElement(

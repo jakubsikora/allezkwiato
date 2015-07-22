@@ -28,7 +28,7 @@ const Index = React.createClass({
       } else {
         let leader = false;
 
-        if (rider.liveGap.charAt(0) === '-') {
+        if (rider.liveGap && rider.liveGap.charAt(0) === '-') {
           leader = true;
         } else if (rider.HasYellowJersey) {
           leader = true;
@@ -116,7 +116,7 @@ const Index = React.createClass({
         <div className="table-responsive table-non-trackers">
           <table className="table table-bordered table-striped table-condensed">
             <thead>
-              <th>Riders without tracker</th>
+              <th>Riders without tracker ({nonTrackedRiders.length})</th>
             </thead>
             <tbody className="non-tracker">
               {nonTrackedRows}
