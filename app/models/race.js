@@ -3,9 +3,11 @@
 import Backbone from 'backbone';
 import Riders from './rider';
 import Status from './status';
+import Stage from './stage';
 
 const ridersObj = new Riders();
 const statusObj = new Status();
+const stageObj = new Stage();
 
 class Race extends Backbone.Model {
   defaults() {
@@ -20,7 +22,8 @@ class Race extends Backbone.Model {
       leaderGap: null,
       ridersCache: [],
       nonTrackedRiders: [],
-      status: null
+      status: null,
+      stage: {}
     };
   }
 
@@ -144,6 +147,12 @@ class Race extends Backbone.Model {
       .fetch()
       .then(function(response) {
         that.set({status: response.EnglishMessage});
+      });
+
+    stageObj
+      .fetch()
+      .then(function(response) {
+        that.set({stage: response});
       });
   }
 

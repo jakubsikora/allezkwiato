@@ -83,18 +83,23 @@ const Index = React.createClass({
       <div className="panel panel-default">
         <div className="panel-heading">
           <h3 className="panel-title">
-            <img src="/img/flash.gif" />
-            <span> Tracking: {riders.length} riders, </span>
-            <span> Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
-            <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
-            <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km </span>
-            <img src="/img/flash.gif" />
+            <p>
+              <span>Stage {this.props.data.stage.StageNumber} - </span>
+              <span>{this.props.data.stage.DepartingTown} to </span>
+              <span>{this.props.data.stage.ArrivingTown} - </span>
+              <span> {this.props.data.stage.TotalDistance} km</span>
+            </p>
+            <p>
+              <img src="/img/flash.gif" />
+              <span> Tracking: {riders.length} riders, </span>
+              <span> Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
+              <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
+              <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km </span>
+              <img src="/img/flash.gif" />
+            </p>
           </h3>
         </div>
         <div className="panel-body">
-          <div className="row race-status">
-            <p>{status}</p>
-          </div>
           <div className="row">
             <div className="distance-indicator-line">
               <div className="distance-indicator" style={distanceStyle}>
