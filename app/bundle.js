@@ -23826,6 +23826,16 @@
 	                _react2['default'].createElement('img', { src: "/img/flash.gif" })
 	              )
 	            )
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: "powered" },
+	            'Powered by ',
+	            _react2['default'].createElement(
+	              'a',
+	              { href: 'http://dimensiondata.com/' },
+	              'dimensiondata'
+	            )
 	          )
 	        )
 	      ),

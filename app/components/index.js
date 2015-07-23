@@ -93,6 +93,9 @@ const Index = React.createClass({
                 <span> {this.props.data.stage.TotalDistance} km <img src="/img/flash.gif" /></span>
               </a>
             </div>
+            <div className="powered">
+              Powered by <a href='http://dimensiondata.com/'>dimensiondata</a>
+            </div>
           </div>
         </div>
 

@@ -90,3 +90,9 @@ tr.yellow {
   font-size: 0.8em;
   margin-bottom: 5px;
 }
+
+.powered {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
