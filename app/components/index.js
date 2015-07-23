@@ -117,7 +117,8 @@ const Index = React.createClass({
                 <div className="row">
                   <div className="distance-indicator-line">
                     <div className="distance-indicator" style={distanceStyle}>
-                      <img src="/img/bike.png" width="25" />
+                      <span className="text-to-finish">{percentToFinish}% to finish</span>
+                      <img src="/img/bike.gif" width="40" />
                     </div>
                   </div>
                 </div>

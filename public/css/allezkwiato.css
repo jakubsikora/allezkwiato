@@ -96,3 +96,10 @@ tr.yellow {
   top: 15px;
   right: 15px;
 }
+
+.text-to-finish {
+  position: relative;
+  right: 5px;
+  font-size: 0.8em;
+  top: 7px;
+}

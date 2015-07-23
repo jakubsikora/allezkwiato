@@ -23901,7 +23901,13 @@
 	                  _react2['default'].createElement(
 	                    'div',
 	                    { className: "distance-indicator", style: distanceStyle },
-	                    _react2['default'].createElement('img', { src: "/img/bike.png", width: "25" })
+	                    _react2['default'].createElement(
+	                      'span',
+	                      { className: "text-to-finish" },
+	                      percentToFinish,
+	                      '% to finish'
+	                    ),
+	                    _react2['default'].createElement('img', { src: "/img/bike.gif", width: "40" })
 	                  )
 	                )
 	              ),
