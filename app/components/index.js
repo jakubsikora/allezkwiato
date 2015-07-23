@@ -80,75 +80,89 @@ const Index = React.createClass({
     if (status) status = status.replace(/(<([^>]+)>)/ig, '');
 
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <h3 className="panel-title">
-            <p>
-              <span>Stage {this.props.data.stage.StageNumber} - </span>
-              <span>{this.props.data.stage.DepartingTown} to </span>
-              <span>{this.props.data.stage.ArrivingTown} - </span>
-              <span> {this.props.data.stage.TotalDistance} km</span>
-            </p>
-            <p>
-              <img src="/img/flash.gif" />
-              <span> Tracking: {riders.length} riders, </span>
-              <span> Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
-              <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
-              <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km </span>
-              <img src="/img/flash.gif" />
-            </p>
-          </h3>
+      <div>
+        <div className="navbar navbar-default">
+          <div className="container-fluid">
+            <div className="navbar-header">
+              <a className="navbar-brand" href="/">
+                (Beta)
+                Tour de France 2015 - Live Stage
+                <span> {this.props.data.stage.StageNumber} - </span>
+                <span>{this.props.data.stage.DepartingTown} to </span>
+                <span>{this.props.data.stage.ArrivingTown} - </span>
+                <span> {this.props.data.stage.TotalDistance} km <img src="/img/flash.gif" /></span>
+              </a>
+            </div>
+          </div>
         </div>
-        <div className="panel-body">
-          <div className="row">
-            <div className="distance-indicator-line">
-              <div className="distance-indicator" style={distanceStyle}>
-                <img src="/img/bike.png" width="25" />
+
+        <div className="intro-header">
+          <div className="intro-overlay"></div>
+          <div className="container">
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <h3 className="panel-title">
+                  <p>
+                    <span> Tracking: {riders.length} riders, </span>
+                    <span> Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
+                    <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
+                    <span>Current distance: {this.props.data.distanceFromStart.toFixed(2)} km </span>
+                  </p>
+                </h3>
+              </div>
+              <div className="panel-body">
+                <div className="row">
+                  <div className="distance-indicator-line">
+                    <div className="distance-indicator" style={distanceStyle}>
+                      <img src="/img/bike.png" width="25" />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-lg-6">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search for..."
+                        value={this.state.filterText}
+                        ref="filterTextInput"
+                        onChange={this.onUserInput} />
+                  </div>
+                </div>
+              </div>
+              <div className="table-responsive">
+                <table className="table table-bordered table-striped table-condensed">
+                  <thead>
+                    <th>#</th>
+                    <th>Photo</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Team</th>
+                    <th>Stage Gap</th>
+                    <th>Remaining (km)</th>
+                    <th>Current Speed (km/h)</th>
+                    <th>Avg (km/h)</th>
+                    <th>Rank</th>
+                    <th>Gap to Yellow Jer.</th>
+                    <th>Live Gap to Yellow Jer.</th>
+                  </thead>
+                  <tbody>
+                    {rows}
+                  </tbody>
+                </table>
+              </div>
+              <div className="table-responsive table-non-trackers">
+                <table className="table table-bordered table-striped table-condensed">
+                  <thead>
+                    <th>No tracking data at the moment ({nonTrackedRiders.length} / {riders.length + nonTrackedRiders.length})</th>
+                  </thead>
+                  <tbody className="non-tracker">
+                    {nonTrackedRows}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-lg-6">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search for..."
-                  value={this.state.filterText}
-                  ref="filterTextInput"
-                  onChange={this.onUserInput} />
-            </div>
-          </div>
-        </div>
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped table-condensed">
-            <thead>
-              <th>#</th>
-              <th>Photo</th>
-              <th>First name</th>
-              <th>Last name</th>
-              <th>Team</th>
-              <th>Stage Gap</th>
-              <th>Remaining (km)</th>
-              <th>Current Speed (km/h)</th>
-              <th>Avg (km/h)</th>
-              <th>Rank</th>
-              <th>Gap to Yellow Jer.</th>
-              <th>Live Gap to Yellow Jer.</th>
-            </thead>
-            <tbody>
-              {rows}
-            </tbody>
-          </table>
-        </div>
-        <div className="table-responsive table-non-trackers">
-          <table className="table table-bordered table-striped table-condensed">
-            <thead>
-              <th>No tracking data at the moment ({nonTrackedRiders.length} / {riders.length + nonTrackedRiders.length})</th>
-            </thead>
-            <tbody className="non-tracker">
-              {nonTrackedRows}
-            </tbody>
-          </table>
         </div>
       </div>
     )

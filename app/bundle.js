@@ -23784,211 +23784,236 @@
 
 	    return _react2['default'].createElement(
 	      'div',
-	      { className: "panel panel-default" },
+	      null,
 	      _react2['default'].createElement(
 	        'div',
-	        { className: "panel-heading" },
+	        { className: "navbar navbar-default" },
 	        _react2['default'].createElement(
-	          'h3',
-	          { className: "panel-title" },
+	          'div',
+	          { className: "container-fluid" },
 	          _react2['default'].createElement(
-	            'p',
-	            null,
+	            'div',
+	            { className: "navbar-header" },
 	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              'Stage ',
-	              this.props.data.stage.StageNumber,
-	              ' - '
-	            ),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              this.props.data.stage.DepartingTown,
-	              ' to '
-	            ),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              this.props.data.stage.ArrivingTown,
-	              ' - '
-	            ),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              ' ',
-	              this.props.data.stage.TotalDistance,
-	              ' km'
+	              'a',
+	              { className: "navbar-brand", href: "/" },
+	              '(Beta) Tour de France 2015 - Live Stage',
+	              _react2['default'].createElement(
+	                'span',
+	                null,
+	                ' ',
+	                this.props.data.stage.StageNumber,
+	                ' - '
+	              ),
+	              _react2['default'].createElement(
+	                'span',
+	                null,
+	                this.props.data.stage.DepartingTown,
+	                ' to '
+	              ),
+	              _react2['default'].createElement(
+	                'span',
+	                null,
+	                this.props.data.stage.ArrivingTown,
+	                ' - '
+	              ),
+	              _react2['default'].createElement(
+	                'span',
+	                null,
+	                ' ',
+	                this.props.data.stage.TotalDistance,
+	                ' km ',
+	                _react2['default'].createElement('img', { src: "/img/flash.gif" })
+	              )
 	            )
-	          ),
-	          _react2['default'].createElement(
-	            'p',
-	            null,
-	            _react2['default'].createElement('img', { src: "/img/flash.gif" }),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              ' Tracking: ',
-	              riders.length,
-	              ' riders, '
-	            ),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              ' Race speed: ',
-	              this.props.data.speed.toFixed(2),
-	              ' km/h, '
-	            ),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              'Remaining: ',
-	              this.props.data.distanceToFinish.toFixed(2),
-	              ' km, '
-	            ),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              'Current distance: ',
-	              this.props.data.distanceFromStart.toFixed(2),
-	              ' km '
-	            ),
-	            _react2['default'].createElement('img', { src: "/img/flash.gif" })
 	          )
 	        )
 	      ),
 	      _react2['default'].createElement(
 	        'div',
-	        { className: "panel-body" },
+	        { className: "intro-header" },
+	        _react2['default'].createElement('div', { className: "intro-overlay" }),
 	        _react2['default'].createElement(
 	          'div',
-	          { className: "row" },
+	          { className: "container" },
 	          _react2['default'].createElement(
 	            'div',
-	            { className: "distance-indicator-line" },
+	            { className: "panel panel-default" },
 	            _react2['default'].createElement(
 	              'div',
-	              { className: "distance-indicator", style: distanceStyle },
-	              _react2['default'].createElement('img', { src: "/img/bike.png", width: "25" })
+	              { className: "panel-heading" },
+	              _react2['default'].createElement(
+	                'h3',
+	                { className: "panel-title" },
+	                _react2['default'].createElement(
+	                  'p',
+	                  null,
+	                  _react2['default'].createElement(
+	                    'span',
+	                    null,
+	                    ' Tracking: ',
+	                    riders.length,
+	                    ' riders, '
+	                  ),
+	                  _react2['default'].createElement(
+	                    'span',
+	                    null,
+	                    ' Race speed: ',
+	                    this.props.data.speed.toFixed(2),
+	                    ' km/h, '
+	                  ),
+	                  _react2['default'].createElement(
+	                    'span',
+	                    null,
+	                    'Remaining: ',
+	                    this.props.data.distanceToFinish.toFixed(2),
+	                    ' km, '
+	                  ),
+	                  _react2['default'].createElement(
+	                    'span',
+	                    null,
+	                    'Current distance: ',
+	                    this.props.data.distanceFromStart.toFixed(2),
+	                    ' km '
+	                  )
+	                )
+	              )
+	            ),
+	            _react2['default'].createElement(
+	              'div',
+	              { className: "panel-body" },
+	              _react2['default'].createElement(
+	                'div',
+	                { className: "row" },
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: "distance-indicator-line" },
+	                  _react2['default'].createElement(
+	                    'div',
+	                    { className: "distance-indicator", style: distanceStyle },
+	                    _react2['default'].createElement('img', { src: "/img/bike.png", width: "25" })
+	                  )
+	                )
+	              ),
+	              _react2['default'].createElement(
+	                'div',
+	                { className: "row" },
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: "col-lg-6" },
+	                  _react2['default'].createElement('input', {
+	                    type: "text",
+	                    className: "form-control",
+	                    placeholder: "Search for...",
+	                    value: this.state.filterText,
+	                    ref: "filterTextInput",
+	                    onChange: this.onUserInput })
+	                )
+	              )
+	            ),
+	            _react2['default'].createElement(
+	              'div',
+	              { className: "table-responsive" },
+	              _react2['default'].createElement(
+	                'table',
+	                { className: "table table-bordered table-striped table-condensed" },
+	                _react2['default'].createElement(
+	                  'thead',
+	                  null,
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    '#'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Photo'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'First name'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Last name'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Team'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Stage Gap'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Remaining (km)'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Current Speed (km/h)'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Avg (km/h)'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Rank'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Gap to Yellow Jer.'
+	                  ),
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'Live Gap to Yellow Jer.'
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'tbody',
+	                  null,
+	                  rows
+	                )
+	              )
+	            ),
+	            _react2['default'].createElement(
+	              'div',
+	              { className: "table-responsive table-non-trackers" },
+	              _react2['default'].createElement(
+	                'table',
+	                { className: "table table-bordered table-striped table-condensed" },
+	                _react2['default'].createElement(
+	                  'thead',
+	                  null,
+	                  _react2['default'].createElement(
+	                    'th',
+	                    null,
+	                    'No tracking data at the moment (',
+	                    nonTrackedRiders.length,
+	                    ' / ',
+	                    riders.length + nonTrackedRiders.length,
+	                    ')'
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'tbody',
+	                  { className: "non-tracker" },
+	                  nonTrackedRows
+	                )
+	              )
 	            )
-	          )
-	        ),
-	        _react2['default'].createElement(
-	          'div',
-	          { className: "row" },
-	          _react2['default'].createElement(
-	            'div',
-	            { className: "col-lg-6" },
-	            _react2['default'].createElement('input', {
-	              type: "text",
-	              className: "form-control",
-	              placeholder: "Search for...",
-	              value: this.state.filterText,
-	              ref: "filterTextInput",
-	              onChange: this.onUserInput })
-	          )
-	        )
-	      ),
-	      _react2['default'].createElement(
-	        'div',
-	        { className: "table-responsive" },
-	        _react2['default'].createElement(
-	          'table',
-	          { className: "table table-bordered table-striped table-condensed" },
-	          _react2['default'].createElement(
-	            'thead',
-	            null,
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              '#'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Photo'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'First name'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Last name'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Team'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Stage Gap'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Remaining (km)'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Current Speed (km/h)'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Avg (km/h)'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Rank'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Gap to Yellow Jer.'
-	            ),
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'Live Gap to Yellow Jer.'
-	            )
-	          ),
-	          _react2['default'].createElement(
-	            'tbody',
-	            null,
-	            rows
-	          )
-	        )
-	      ),
-	      _react2['default'].createElement(
-	        'div',
-	        { className: "table-responsive table-non-trackers" },
-	        _react2['default'].createElement(
-	          'table',
-	          { className: "table table-bordered table-striped table-condensed" },
-	          _react2['default'].createElement(
-	            'thead',
-	            null,
-	            _react2['default'].createElement(
-	              'th',
-	              null,
-	              'No tracking data at the moment (',
-	              nonTrackedRiders.length,
-	              ' / ',
-	              riders.length + nonTrackedRiders.length,
-	              ')'
-	            )
-	          ),
-	          _react2['default'].createElement(
-	            'tbody',
-	            { className: "non-tracker" },
-	            nonTrackedRows
 	          )
 	        )
 	      )
