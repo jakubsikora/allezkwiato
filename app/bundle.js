@@ -23574,12 +23574,13 @@
 
 	var _componentsIndex = __webpack_require__(198);
 
+	// TODO: server rendering wtih more routes
+
 	var _componentsIndex2 = _interopRequireDefault(_componentsIndex);
 
-	// TODO: server rendering wtih more routes
 	var routes = _react2['default'].createElement(
 	  _reactRouter.Route,
-	  { handler: _App2['default'], path: '/' },
+	  { handler: _App2['default'], path: "/" },
 	  _react2['default'].createElement(_reactRouter.DefaultRoute, { handler: _componentsIndex2['default'] })
 	);
 
@@ -23691,7 +23692,7 @@
 	          _react2['default'].createElement(
 	            'td',
 	            null,
-	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '30' })
+	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: "30" })
 	          ),
 	          _react2['default'].createElement(
 	            'td',
@@ -23758,7 +23759,7 @@
 	          _react2['default'].createElement(
 	            'td',
 	            null,
-	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: '30' }),
+	            _react2['default'].createElement('img', { src: rider.PhotoUri, height: "30" }),
 	            rider.FirstName,
 	            ' ',
 	            rider.LastName,
@@ -23775,19 +23776,23 @@
 	    percentToFinish = percentToFinish.toFixed(0);
 
 	    var distanceStyle = {
-	      right: percentToFinish + '%'
+	      right: percentToFinish + "%"
 	    };
+
+	    var status = this.props.data.status;
+
+	    if (status) status = status.replace(/(<([^>]+)>)/ig, '');
 
 	    return _react2['default'].createElement(
 	      'div',
-	      { className: 'panel panel-default' },
+	      { className: "panel panel-default" },
 	      _react2['default'].createElement(
 	        'div',
-	        { className: 'panel-heading' },
+	        { className: "panel-heading" },
 	        _react2['default'].createElement(
 	          'h3',
-	          { className: 'panel-title' },
-	          _react2['default'].createElement('img', { src: '/img/flash.gif' }),
+	          { className: "panel-title" },
+	          _react2['default'].createElement('img', { src: "/img/flash.gif" }),
 	          _react2['default'].createElement(
 	            'span',
 	            null,
@@ -23816,47 +23821,56 @@
 	            this.props.data.distanceFromStart.toFixed(2),
 	            ' km '
 	          ),
-	          _react2['default'].createElement('img', { src: '/img/flash.gif' })
+	          _react2['default'].createElement('img', { src: "/img/flash.gif" })
 	        )
 	      ),
 	      _react2['default'].createElement(
 	        'div',
-	        { className: 'panel-body' },
+	        { className: "panel-body" },
 	        _react2['default'].createElement(
 	          'div',
-	          { className: 'row' },
+	          { className: "row" },
+	          _react2['default'].createElement(
+	            'span',
+	            null,
+	            status
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: "row" },
 	          _react2['default'].createElement(
 	            'div',
-	            { className: 'distance-indicator-line' },
+	            { className: "distance-indicator-line" },
 	            _react2['default'].createElement(
 	              'div',
-	              { className: 'distance-indicator', style: distanceStyle },
-	              _react2['default'].createElement('img', { src: '/img/bike.png', width: '25' })
+	              { className: "distance-indicator", style: distanceStyle },
+	              _react2['default'].createElement('img', { src: "/img/bike.png", width: "25" })
 	            )
 	          )
 	        ),
 	        _react2['default'].createElement(
 	          'div',
-	          { className: 'row' },
+	          { className: "row" },
 	          _react2['default'].createElement(
 	            'div',
-	            { className: 'col-lg-6' },
+	            { className: "col-lg-6" },
 	            _react2['default'].createElement('input', {
-	              type: 'text',
-	              className: 'form-control',
-	              placeholder: 'Search for...',
+	              type: "text",
+	              className: "form-control",
+	              placeholder: "Search for...",
 	              value: this.state.filterText,
-	              ref: 'filterTextInput',
+	              ref: "filterTextInput",
 	              onChange: this.onUserInput })
 	          )
 	        )
 	      ),
 	      _react2['default'].createElement(
 	        'div',
-	        { className: 'table-responsive' },
+	        { className: "table-responsive" },
 	        _react2['default'].createElement(
 	          'table',
-	          { className: 'table table-bordered table-striped table-condensed' },
+	          { className: "table table-bordered table-striped table-condensed" },
 	          _react2['default'].createElement(
 	            'thead',
 	            null,
@@ -23930,10 +23944,10 @@
 	      ),
 	      _react2['default'].createElement(
 	        'div',
-	        { className: 'table-responsive table-non-trackers' },
+	        { className: "table-responsive table-non-trackers" },
 	        _react2['default'].createElement(
 	          'table',
-	          { className: 'table table-bordered table-striped table-condensed' },
+	          { className: "table table-bordered table-striped table-condensed" },
 	          _react2['default'].createElement(
 	            'thead',
 	            null,
@@ -23949,7 +23963,7 @@
 	          ),
 	          _react2['default'].createElement(
 	            'tbody',
-	            { className: 'non-tracker' },
+	            { className: "non-tracker" },
 	            nonTrackedRows
 	          )
 	        )
@@ -24029,7 +24043,12 @@
 
 	var _rider2 = _interopRequireDefault(_rider);
 
+	var _status = __webpack_require__(204);
+
+	var _status2 = _interopRequireDefault(_status);
+
 	var ridersObj = new _rider2['default']();
+	var statusObj = new _status2['default']();
 
 	var Race = (function (_Backbone$Model) {
 	  _inherits(Race, _Backbone$Model);
@@ -24053,7 +24072,8 @@
 	        ridersDetails: [],
 	        leaderGap: null,
 	        ridersCache: [],
-	        nonTrackedRiders: []
+	        nonTrackedRiders: [],
+	        status: null
 	      };
 	    }
 	  }, {
@@ -24167,11 +24187,21 @@
 	      this.set({ nonTrackedRiders: nonTrackedRiders });
 	    }
 	  }, {
+	    key: 'parseStatus',
+	    value: function parseStatus() {
+	      var that = this;
+
+	      statusObj.fetch().then(function (response) {
+	        that.set({ status: response.EnglishMessage });
+	      });
+	    }
+	  }, {
 	    key: 'parse',
 	    value: function parse(response) {
 	      this.set({ riders: [] });
 	      this.set({ nonTrackedRiders: [] });
 	      this.set({ ridersDetails: [] });
+	      this.parseStatus();
 	      this.parseRiders(response);
 	    }
 	  }, {
@@ -36928,6 +36958,8 @@
 	  return Rider;
 	})(_backbone2['default'].Model);
 
+	// TODO: properties
+
 	var Riders = (function (_Backbone$Collection) {
 	  _inherits(Riders, _Backbone$Collection);
 
@@ -36948,14 +36980,14 @@
 	        return item.attributes.Id === id;
 	      });
 	    }
-	  }, {
-	    key: 'url',
 
 	    // TODO: parser for custom properties
 
+	  }, {
+	    key: 'url',
 	    value: function url() {
 	      //return "http://localhost:3000/rider.json";
-	      return 'http://letour-livetracking-api.dimensiondata.com/rider';
+	      return "http://letour-livetracking-api.dimensiondata.com/rider";
 	    }
 	  }]);
 
@@ -36965,7 +36997,51 @@
 	exports['default'] = Riders;
 	module.exports = exports['default'];
 
-	// TODO: properties
+/***/ },
+/* 204 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _backbone = __webpack_require__(200);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var Status = (function (_Backbone$Model) {
+	  _inherits(Status, _Backbone$Model);
+
+	  function Status() {
+	    _classCallCheck(this, Status);
+
+	    _get(Object.getPrototypeOf(Status.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(Status, [{
+	    key: 'url',
+	    value: function url() {
+	      return "http://letour-livetracking-api.dimensiondata.com/race/status";
+	    }
+	  }]);
+
+	  return Status;
+	})(_backbone2['default'].Model);
+
+	exports['default'] = Status;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

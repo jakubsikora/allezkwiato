@@ -76,6 +76,10 @@ const Index = React.createClass({
       right: percentToFinish + "%"
     };
 
+    let status = this.props.data.status;
+
+    if (status) status = status.replace(/(<([^>]+)>)/ig, '');
+
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
@@ -89,6 +93,9 @@ const Index = React.createClass({
           </h3>
         </div>
         <div className="panel-body">
+          <div className="row">
+            <span>{status}</span>
+          </div>
           <div className="row">
             <div className="distance-indicator-line">
               <div className="distance-indicator" style={distanceStyle}>

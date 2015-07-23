@@ -2,9 +2,10 @@
 
 import Backbone from 'backbone';
 import Riders from './rider';
-
+import Status from './status';
 
 const ridersObj = new Riders();
+const statusObj = new Status();
 
 class Race extends Backbone.Model {
   defaults() {
@@ -18,7 +19,8 @@ class Race extends Backbone.Model {
       ridersDetails: [],
       leaderGap: null,
       ridersCache: [],
-      nonTrackedRiders: []
+      nonTrackedRiders: [],
+      status: null
     };
   }
 
@@ -135,10 +137,21 @@ class Race extends Backbone.Model {
     this.set({nonTrackedRiders: nonTrackedRiders});
   }
 
+  parseStatus() {
+    const that = this;
+
+    statusObj
+      .fetch()
+      .then(function(response) {
+        that.set({status: response.EnglishMessage});
+      });
+  }
+
   parse(response) {
     this.set({riders: []});
     this.set({nonTrackedRiders: []});
     this.set({ridersDetails: []});
+    this.parseStatus();
     this.parseRiders(response);
   }
 
