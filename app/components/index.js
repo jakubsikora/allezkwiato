@@ -28,13 +28,12 @@ const Index = React.createClass({
       } else {
         let leader = false;
 
-        if (rider.liveGap && rider.liveGap.charAt(0) === '-') {
-          leader = true;
-        } else if (rider.HasYellowJersey) {
+        if (rider.HasYellowJersey) {
           leader = true;
         } else {
           leader = false;
         }
+
         return (
           <tr key={index} className={leader ? 'yellow' : null}>
             <td>{rider.PositionInTheRace}</td>
@@ -93,8 +92,8 @@ const Index = React.createClass({
           </h3>
         </div>
         <div className="panel-body">
-          <div className="row">
-            <span>{status}</span>
+          <div className="row race-status">
+            <p>{status}</p>
           </div>
           <div className="row">
             <div className="distance-indicator-line">

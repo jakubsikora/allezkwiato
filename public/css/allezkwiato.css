@@ -85,3 +85,8 @@ tr.yellow {
   position: absolute;
   bottom: 0px;
 }
+
+.race-status {
+  font-size: 0.8em;
+  margin-bottom: 5px;
+}

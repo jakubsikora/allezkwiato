@@ -23674,13 +23674,12 @@
 	      } else {
 	        var leader = false;
 
-	        if (rider.liveGap && rider.liveGap.charAt(0) === '-') {
-	          leader = true;
-	        } else if (rider.HasYellowJersey) {
+	        if (rider.HasYellowJersey) {
 	          leader = true;
 	        } else {
 	          leader = false;
 	        }
+
 	        return _react2['default'].createElement(
 	          'tr',
 	          { key: index, className: leader ? 'yellow' : null },
@@ -23829,9 +23828,9 @@
 	        { className: "panel-body" },
 	        _react2['default'].createElement(
 	          'div',
-	          { className: "row" },
+	          { className: "row race-status" },
 	          _react2['default'].createElement(
-	            'span',
+	            'p',
 	            null,
 	            status
 	          )
