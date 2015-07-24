@@ -75,9 +75,22 @@ const Index = React.createClass({
       right: percentToFinish + "%"
     };
 
-    let status = this.props.data.status;
+    const status = this.props.data.status;
+    console.log(status);
+    let statusMsg = '';
+    let displayStyle = {
+      display: 'block'
+    }
 
-    if (status) status = status.replace(/(<([^>]+)>)/ig, '');
+    if (status.Status !== 1) {
+      if (status.EnglishMessage) {
+        statusMsg = status.EnglishMessage.replace(/(<([^>]+)>)/ig, '');
+      }
+
+      displayStyle = {
+        display: 'none'
+      }
+    }
 
     return (
       <div>
@@ -105,7 +118,10 @@ const Index = React.createClass({
             <div className="panel panel-default">
               <div className="panel-heading">
                 <h3 className="panel-title">
-                  <p>
+                  <div className="row race-status">
+                    <p>{statusMsg}</p>
+                  </div>
+                  <p style={displayStyle}>
                     <span> Tracking: {riders.length} riders, </span>
                     <span> Race speed: {this.props.data.speed.toFixed(2)} km/h, </span>
                     <span>Remaining: {this.props.data.distanceToFinish.toFixed(2)} km, </span>
@@ -113,7 +129,7 @@ const Index = React.createClass({
                   </p>
                 </h3>
               </div>
-              <div className="panel-body">
+              <div className="panel-body" style={displayStyle}>
                 <div className="row">
                   <div className="distance-indicator-line">
                     <div className="distance-indicator" style={distanceStyle}>
@@ -134,7 +150,7 @@ const Index = React.createClass({
                   </div>
                 </div>
               </div>
-              <div className="table-responsive">
+              <div className="table-responsive" style={displayStyle}>
                 <table className="table table-bordered table-striped table-condensed">
                   <thead>
                     <th>#</th>
@@ -155,7 +171,7 @@ const Index = React.createClass({
                   </tbody>
                 </table>
               </div>
-              <div className="table-responsive table-non-trackers">
+              <div className="table-responsive table-non-trackers" style={displayStyle}>
                 <table className="table table-bordered table-striped table-condensed">
                   <thead>
                     <th>No tracking data at the moment ({nonTrackedRiders.length} / {riders.length + nonTrackedRiders.length})</th>

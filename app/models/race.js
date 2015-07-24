@@ -22,7 +22,7 @@ class Race extends Backbone.Model {
       leaderGap: null,
       ridersCache: [],
       nonTrackedRiders: [],
-      status: null,
+      status: {},
       stage: {}
     };
   }
@@ -146,7 +146,7 @@ class Race extends Backbone.Model {
     statusObj
       .fetch()
       .then(function(response) {
-        that.set({status: response.EnglishMessage});
+        that.set({status: response});
       });
 
     stageObj

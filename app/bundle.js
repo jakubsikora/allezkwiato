@@ -23779,8 +23779,21 @@
 	    };
 
 	    var status = this.props.data.status;
+	    console.log(status);
+	    var statusMsg = '';
+	    var displayStyle = {
+	      display: 'block'
+	    };
 
-	    if (status) status = status.replace(/(<([^>]+)>)/ig, '');
+	    if (status.Status !== 1) {
+	      if (status.EnglishMessage) {
+	        statusMsg = status.EnglishMessage.replace(/(<([^>]+)>)/ig, '');
+	      }
+
+	      displayStyle = {
+	        display: 'none'
+	      };
+	    }
 
 	    return _react2['default'].createElement(
 	      'div',
@@ -23856,8 +23869,17 @@
 	                'h3',
 	                { className: "panel-title" },
 	                _react2['default'].createElement(
+	                  'div',
+	                  { className: "row race-status" },
+	                  _react2['default'].createElement(
+	                    'p',
+	                    null,
+	                    statusMsg
+	                  )
+	                ),
+	                _react2['default'].createElement(
 	                  'p',
-	                  null,
+	                  { style: displayStyle },
 	                  _react2['default'].createElement(
 	                    'span',
 	                    null,
@@ -23891,7 +23913,7 @@
 	            ),
 	            _react2['default'].createElement(
 	              'div',
-	              { className: "panel-body" },
+	              { className: "panel-body", style: displayStyle },
 	              _react2['default'].createElement(
 	                'div',
 	                { className: "row" },
@@ -23929,7 +23951,7 @@
 	            ),
 	            _react2['default'].createElement(
 	              'div',
-	              { className: "table-responsive" },
+	              { className: "table-responsive", style: displayStyle },
 	              _react2['default'].createElement(
 	                'table',
 	                { className: "table table-bordered table-striped table-condensed" },
@@ -24006,7 +24028,7 @@
 	            ),
 	            _react2['default'].createElement(
 	              'div',
-	              { className: "table-responsive table-non-trackers" },
+	              { className: "table-responsive table-non-trackers", style: displayStyle },
 	              _react2['default'].createElement(
 	                'table',
 	                { className: "table table-bordered table-striped table-condensed" },
@@ -24143,7 +24165,7 @@
 	        leaderGap: null,
 	        ridersCache: [],
 	        nonTrackedRiders: [],
-	        status: null,
+	        status: {},
 	        stage: {}
 	      };
 	    }
@@ -24263,7 +24285,7 @@
 	      var that = this;
 
 	      statusObj.fetch().then(function (response) {
-	        that.set({ status: response.EnglishMessage });
+	        that.set({ status: response });
 	      });
 
 	      stageObj.fetch().then(function (response) {
